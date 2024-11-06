@@ -249,4 +249,5 @@ if __name__ == '__main__':
     socketio.run(app, 
                 debug=True, 
                 host='0.0.0.0', 
-                port=5555)  # Only use in development
+                port=5555,
+                allow_unsafe_werkzeug=True)  # Only use in development

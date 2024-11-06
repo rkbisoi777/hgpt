@@ -45,7 +45,7 @@ socketio = SocketIO(app,
 
 def get_chat_model(callback_handler):
     return ChatOpenAI(
-        openai_api_key='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',
+        openai_api_key='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',
         streaming=True,
         callbacks=[callback_handler],
         temperature=0.7,

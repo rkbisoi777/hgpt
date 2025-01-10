@@ -39,8 +39,8 @@ export function Navbar() {
             </button>
           </>
         ) : (
-          <button onClick={() => setShowLoginModal(true)}>
-            <NavbarIcon icon={LogIn} label="Login" />
+          <button className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-sm px-3 py-1.5 rounded-lg" onClick={() => setShowLoginModal(true)}>
+            Login
           </button>
         )}
       </div>

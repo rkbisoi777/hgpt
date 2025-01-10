@@ -73,10 +73,18 @@ export function ChatInterface({ initialQuery }: ChatInterfaceProps) {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-64px)]">
-      <MessageList messages={messages} isLoading={isLoading} />
-      <div className="max-w-4xl mx-auto w-full">
-        <ChatInput onSend={handleSendMessage} disabled={isLoading} />
+    <div className="flex flex-col h-full relative bg-gray-50">
+      <div className="flex-1 overflow-y-auto">
+        <MessageList 
+          messages={messages} 
+          isLoading={isLoading} 
+          onSendMessage={handleSendMessage}
+        />
+      </div>
+      <div className="sticky bottom-2 bg-white mx-1 border rounded-lg shadow-md">
+        <div className="max-w-4xl mx-auto w-full">
+          <ChatInput onSend={handleSendMessage} disabled={isLoading} />
+        </div>
       </div>
     </div>
   );

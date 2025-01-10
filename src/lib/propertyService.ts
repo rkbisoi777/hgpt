@@ -8,11 +8,8 @@ export const propertyService = {
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (error) {
-      throw error;
-    }
-
-    return data;
+    if (error) throw error;
+    return data || [];
   },
 
   async getPropertyById(id: string): Promise<Property | null> {
@@ -22,90 +19,84 @@ export const propertyService = {
       .eq('id', id)
       .single();
 
-    if (error) {
-      throw error;
-    }
-
+    if (error) throw error;
     return data;
   },
 
+  async searchProperties(query: string): Promise<Property[]> {
+    try {
+      // Extract property details from the query if it's a contextualized query
+      const propertyMatch = query.match(/property "([^"]+)" located at ([^"]+) priced at \$(\d+)/i);
+      
+      if (propertyMatch) {
+        const [, title, location] = propertyMatch;
+        // Search by title
+        const titleQuery = await supabase
+          .from('properties')
+          .select('*')
+          .ilike('title', `%${title}%`);
 
-async searchProperties(query: string): Promise<Property[]> {
-  let supabaseQuery = supabase
-    .from('properties')
-    .select('*')
-    .order('created_at', { ascending: false });
+        if (titleQuery.error) throw titleQuery.error;
+        
+        // If no results by title, try location
+        if (!titleQuery.data?.length) {
+          const locationQuery = await supabase
+            .from('properties')
+            .select('*')
+            .ilike('location', `%${location}%`);
 
-  // Define filters
-  const filters: { field: string; operator: string; value: any }[] = [];
-  const textSearchFields = ['title', 'description', 'location'];
-  let textSearchQuery = '';
+          if (locationQuery.error) throw locationQuery.error;
+          return locationQuery.data || [];
+        }
 
-  // Parse query for specific filters
-  const bedroomsMatch = query.match(/(\d+)BHK/i);
-  const locationMatch = query.match(/in ([a-zA-Z\s]+)/i);
-  const priceUnderMatch = query.match(/under (\d+[\w\s]*)/i);
-  const priceAboveMatch = query.match(/above (\d+[\w\s]*)/i);
-  const sqftAboveMatch = query.match(/above (\d+)\s?sqft/i);
-  const sqftUnderMatch = query.match(/under (\d+)\s?sqft/i);
+        return titleQuery.data;
+      }
 
-  // Exact Match for Bedrooms
-  if (bedroomsMatch) {
-    filters.push({ field: 'bedrooms', operator: 'eq', value: parseInt(bedroomsMatch[1], 10) });
-  }
+      // Handle regular search queries
+      const bedroomsMatch = query.match(/(\d+)\s*bhk/i);
+      const priceMatch = query.match(/(\d+(?:\.\d+)?)\s*(crore|lakh|k|million)/i);
+      const locationMatch = query.match(/in\s+([a-zA-Z\s,]+)/i);
+      
+      let baseQuery = supabase.from('properties').select('*');
 
-  // Partial Match for Location
-  if (locationMatch) {
-    filters.push({ field: 'location', operator: 'ilike', value: `%${locationMatch[1].trim()}%` });
-  }
+      if (bedroomsMatch) {
+        baseQuery = baseQuery.eq('bedrooms', parseInt(bedroomsMatch[1]));
+      }
 
-  // Price Filters
-  if (priceUnderMatch) {
-    const price = parseFloat(priceUnderMatch[1].replace(/\D/g, ''));
-    if (!isNaN(price)) {
-      filters.push({ field: 'price', operator: 'lte', value: price });
+      if (locationMatch) {
+        const location = locationMatch[1].trim();
+        baseQuery = baseQuery.ilike('location', `%${location}%`);
+      }
+
+      if (priceMatch) {
+        let price = parseFloat(priceMatch[1]);
+        const unit = priceMatch[2].toLowerCase();
+        
+        switch (unit) {
+          case 'crore':
+            price *= 10000000;
+            break;
+          case 'lakh':
+            price *= 100000;
+            break;
+          case 'k':
+            price *= 1000;
+            break;
+          case 'million':
+            price *= 1000000;
+            break;
+        }
+        
+        baseQuery = baseQuery.lte('price', price);
+      }
+
+      const { data, error } = await baseQuery.order('created_at', { ascending: false });
+      if (error) throw error;
+      return data || [];
+
+    } catch (error) {
+      console.error('Error searching properties:', error);
+      throw error;
     }
   }
-
-  if (priceAboveMatch) {
-    const price = parseFloat(priceAboveMatch[1].replace(/\D/g, ''));
-    if (!isNaN(price)) {
-      filters.push({ field: 'price', operator: 'gte', value: price });
-    }
-  }
-
-  // Sqft Filters
-  if (sqftAboveMatch) {
-    filters.push({ field: 'sqft', operator: 'gte', value: parseInt(sqftAboveMatch[1], 10) });
-  }
-
-  if (sqftUnderMatch) {
-    filters.push({ field: 'sqft', operator: 'lte', value: parseInt(sqftUnderMatch[1], 10) });
-  }
-
-  // General Text Search (fallback if no structured filters match)
-  if (filters.length === 0) {
-    textSearchQuery = textSearchFields
-      .map((field) => `${field}.ilike.%${query}%`)
-      .join(',');
-    supabaseQuery = supabaseQuery.or(textSearchQuery);
-  } else {
-    // Apply each structured filter as an AND condition
-    filters.forEach(({ field, operator, value }) => {
-      supabaseQuery = supabaseQuery.filter(field, operator as any, value);
-    });
-  }
-
-  // Execute Query
-  const { data, error } = await supabaseQuery;
-
-  if (error) {
-    console.error('Error fetching properties:', error.message);
-    throw new Error('Failed to fetch properties. Please try again later.');
-  }
-
-  return data || [];
-}
-
-
 };

@@ -64,7 +64,7 @@ export class ChatService {
       const propertiesContext = properties.length > 0
         ? `Found ${properties.length} properties matching the criteria:\n${
           properties.map(p => 
-            `- ${p.title} (${p.bedrooms} beds, ${p.bathrooms} baths) at $${p.price.toLocaleString()} in ${p.location}`
+            `- ${p.title} (${p.bedrooms} beds, ${p.bathrooms} baths) at ₹${p.price.toLocaleString()} in ${p.location}`
           ).join('\n')
         }`
         : "No properties found matching the criteria.";

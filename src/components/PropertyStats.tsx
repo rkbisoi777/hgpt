@@ -8,7 +8,7 @@ interface PropertyStatsProps {
 
 export function PropertyStats({ property }: PropertyStatsProps) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm">
       <div className="flex items-center">
         <Bed className="w-5 h-5 mr-2 text-gray-500" />
         <div>

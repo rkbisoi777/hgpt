@@ -4,35 +4,40 @@ import { Send } from 'lucide-react';
 interface ChatInputProps {
   onSend: (message: string) => void;
   disabled?: boolean;
+  placeholder?: string;
 }
 
-export function ChatInput({ onSend, disabled }: ChatInputProps) {
+export function ChatInput({ onSend, disabled, placeholder }: ChatInputProps) {
   const [input, setInput] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim()) {
-      onSend(input);
+      onSend(input.trim());
       setInput('');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 p-4 border-t">
+    <form onSubmit={handleSubmit} className="flex gap-2 p-2">
       <input
         type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        placeholder="Search for properties..."
-        className="flex-1 px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder={placeholder || "Type your message..."}
+        className="flex-1 px-3 py-2 text-sm rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
         disabled={disabled}
       />
       <button
         type="submit"
-        disabled={disabled}
-        className="p-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50"
+        disabled={disabled || !input.trim()}
+        className="px-1.5 py-0.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:opacity-90 disabled:opacity-50 transition-opacity"
       >
-        <Send className="w-5 h-5" />
+        {/* <Send className="w-4 h-4" /> */}
+        <div className="w-6 h-6 mr-0.5">
+          <i className="fas fa-paper-plane"></i>
+        </div>
+        
       </button>
     </form>
   );

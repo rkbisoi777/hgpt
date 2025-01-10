@@ -11,9 +11,9 @@ interface PropertyCardProps {
 export function PropertyCard({ property, compact = false }: PropertyCardProps) {
   return (
     <Link to={`/property/${property.id}`} className="block">
-      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow mb-0.5 border border-gray-200">
         <img
-          src={property.imageUrl}
+          src={property.image_url}
           alt={property.title}
           className={`w-full object-cover ${compact ? 'h-36' : 'h-48'}`}
         />
@@ -22,7 +22,7 @@ export function PropertyCard({ property, compact = false }: PropertyCardProps) {
             {property.title}
           </h3>
           <p className={`font-bold text-blue-600 ${compact ? 'text-lg' : 'text-2xl'}`}>
-            ${property.price.toLocaleString()}
+            ₹{property.price.toLocaleString()}
           </p>
           <div className="flex items-center text-gray-600 text-sm">
             <MapPin className="w-3 h-3 mr-1" />

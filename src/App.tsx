@@ -9,9 +9,11 @@ import { Properties } from './pages/Properties';
 import { Profile } from './pages/Profile';
 import { Toaster } from 'react-hot-toast';
 import { Layout } from './components/layout/Layout';
+import { TokenProvider } from './components/TokenContext';
 
 function App() {
   return (
+    <TokenProvider>
     <Layout>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -22,8 +24,18 @@ function App() {
         <Route path="/compare" element={<Compare />} />
         <Route path="/profile" element={<Profile />} />
       </Routes>
-      <Toaster position="bottom-right" />
+      <Toaster 
+        position="top-center" 
+        toastOptions={{
+          style: {
+            border: '2px solid #338af1', // Blue border
+            padding: '3px',
+            borderRadius: '8px',
+          }
+        }} 
+      />
     </Layout>
+    </TokenProvider>
   );
 }
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Send } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -9,12 +9,14 @@ interface ChatInputProps {
 
 export function ChatInput({ onSend, disabled, placeholder }: ChatInputProps) {
   const [input, setInput] = useState('');
+  const [iconClicked, setIconClicked] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim()) {
       onSend(input.trim());
       setInput('');
+      setIconClicked(true);
     }
   };
 
@@ -31,12 +33,13 @@ export function ChatInput({ onSend, disabled, placeholder }: ChatInputProps) {
       <button
         type="submit"
         disabled={disabled || !input.trim()}
-        className="px-1.5 py-0.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:opacity-90 disabled:opacity-50 transition-opacity"
+        className="px-1.5 py-0.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:opacity-90 disabled:opacity-70 transition-opacity"
       >
-        {/* <Send className="w-4 h-4" /> */}
+       
         <div className="w-6 h-6 mr-0.5">
           <i className="fas fa-paper-plane"></i>
         </div>
+        
         
       </button>
     </form>

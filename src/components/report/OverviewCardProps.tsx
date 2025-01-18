@@ -27,13 +27,13 @@ const OverviewCard: React.FC<OverviewCardProps> = ({
     <div className="rounded-lg border border-gray-300 bg-white shadow-lg overflow-hidden">
       <div className="p-4">
         <div className='flex flex-row justify-between'>
-        <h2 className="text-lg font-bold text-gray-800 mb-6">{projectName} Overview</h2>
+        <h2 className="text-lg font-bold text-gray-800 mb-2">{projectName} Overview</h2>
         
        
         </div>
         
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mb-2">
           <div className="space-y-1">
             <div className="flex justify-start items-center">
             <i className="fas fa-building h-5 w-5 text-gray-600 ml-2"></i>
@@ -126,13 +126,13 @@ const OverviewCard: React.FC<OverviewCardProps> = ({
       </div>
 
       <div className="bg-gray-100 p-4 flex flex-wrap justify-center items-center gap-4">
-  <button className="bg-blue-200 text-blue-700 px-4 py-2 h-10 rounded text-sm flex items-center">
-    <i className="fas fa-download h-5 w-5 text-blue-600 mr-2"></i>
+  <button className="bg-blue-200 text-blue-700 px-2 py-1 h-8 rounded text-sm flex items-center">
+    <i className="fas fa-download h-5 w-5 text-blue-600 mr-2 mt-1"></i>
     Download Brochure
   </button>
-  <button className="bg-blue-200 text-blue-700 px-4 py-2 h-10 rounded text-sm">Save</button>
-  <button className="bg-blue-200 text-blue-700 px-4 py-2 h-10 rounded text-sm">Share</button>
-  <button className="bg-blue-600 text-white px-4 py-2 h-10 rounded hover:bg-blue-700">
+  <button className="bg-blue-200 text-blue-700 px-2 py-1 h-8 rounded text-sm">Save</button>
+  <button className="bg-blue-200 text-blue-700 px-2 py-1 h-8 rounded text-sm">Share</button>
+  <button className="bg-blue-600 text-white px-3 py-1 h-8 rounded hover:bg-blue-700">
     Ask For Details
   </button>
 </div>

@@ -36,7 +36,7 @@ export function LocalityStats({ propertyId }: LocalityStatsProps) {
 
   return (
     <div className="rounded-lg border border-gray-300 bg-white shadow-lg overflow-hidden p-3 mt-4">
-      <h2 className="text-lg font-semibold mb-1">Locality Stats</h2>
+      <h2 className="text-lg font-semibold mb-1">Locality</h2>
       <div className="text-sm">
       
       <p className={stats.crimeRateStatus === 'good' ? 'text-green-500' : 'text-red-500'}>

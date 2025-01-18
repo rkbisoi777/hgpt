@@ -21,12 +21,15 @@ export function PropertyDescriptionCard({ title, description }: PropertyDescript
       <p className="text-gray-700 text-sm">
         {isExpanded ? (description || defaultDescription) : `${(description || defaultDescription).slice(0, 300)}...`}
       </p>
-      <button
+      <div className="flex justify-end">
+        <button
         onClick={toggleReadMore}
-        className="mt-2 text-blue-500 text-sm hover:underline focus:outline-none"
+        className="mt-2 text-blue-500 text-xs hover:underline focus:outline-none"
       >
         {isExpanded ? 'Read Less' : 'Read More'}
       </button>
+      </div>
+      
     </div>
   );
 }

@@ -6,7 +6,7 @@ export interface Property {
   bedrooms: number;
   bathrooms: number;
   sqft: number;
-  image_url: string;
+  imageUrl: string;
   description: string;
   created_at: string;
   updated_at: string;

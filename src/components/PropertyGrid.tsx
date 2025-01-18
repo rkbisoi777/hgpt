@@ -1,6 +1,7 @@
 import React from 'react';
 import { Property } from '../types';
 import { PropertyCard } from './PropertyCard';
+import { SmallPropertyCard } from './SmallPropertyCard';
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 
@@ -14,12 +15,13 @@ export function PropertyGrid({ properties, maxInitialDisplay = 4 }: PropertyGrid
   const displayedProperties = properties.slice(0, maxInitialDisplay);
 
   return (
-    <div className="space-y-2 bg-white">
+    <div className="space-y-2 bg-gray-50">
       {/* <p className="text-xs">{JSON.stringify(properties)}</p> */}
-      <div className="overflow-x-auto bg-white">
-        <div className="grid grid-flow-col auto-cols-max gap-2 bg-white">
+      <div className="overflow-x-auto bg-gray-50">
+        <div className="grid grid-flow-col auto-cols-max gap-2 bg-gray-50">
           {displayedProperties.map(property => (
-            <PropertyCard key={property.id} property={property} compact />
+            // <PropertyCard key={property.id} property={property} compact />
+            <SmallPropertyCard key={property.id} property={property} compact />
           ))}
         </div>
       </div>

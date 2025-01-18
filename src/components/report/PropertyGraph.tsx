@@ -33,7 +33,7 @@ export function PropertyGraph({ propertyId }: PropertyGraphProps) {
 
   return (
     <div className="rounded-lg border border-gray-300 bg-white shadow-lg overflow-hidden p-3 mt-4">
-      <h2 className="text-lg font-semibold mb-2">Property Appreciation Graph</h2>
+      <h2 className="text-lg font-semibold mb-2">Price Trends</h2>
       <div className="h-48 bg-gray-200 flex items-center justify-center">
         {graphData.trend === 'good' ? (
           <span className="text-green-500">Graph Placeholder (Good Trend)</span>

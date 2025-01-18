@@ -11,6 +11,11 @@ export function PropertyChatButton({ property }: PropertyChatButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const chatButtonRef = useRef<HTMLButtonElement | null>(null);
+   const [showMessage, setShowMessage] = useState(false);
+
+  const handleCloseMessage = () => {
+    setShowMessage(false);
+  };
 
   // Prevent scrolling when modal is open
   useEffect(() => {
@@ -27,9 +32,39 @@ export function PropertyChatButton({ property }: PropertyChatButtonProps) {
     };
   }, [isOpen]);
 
+  // Show proactive message after 3 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowMessage(true);
+    }, 3000); // Change time as per your requirement
+    return () => clearTimeout(timer); // Clean up timer when component unmounts
+  }, []);
+
   return (
     <>
       {/* Chat Button */}
+       {showMessage && (
+        
+      <div className="fixed bottom-16 right-8 flex flex-row z-50 w-1/2">
+        <div className=" px-2  bg-white text-gray-800 p-1 rounded-l-lg rounded-t-lg shadow-lg text-sm border border-blue-500 mb-2">
+          <div className="flex flex-col">
+            <span>Hi!, I’m HouseGPT! I can help with <b>{property.title}</b></span>
+<p> 📊 Property details </p>
+<p>💰 Pricing info</p>
+<p>🏙️ Neighborhood insights</p>
+<p>🗓️ Booking a visit</p>
+<p>What would you like to know?</p>
+          </div>
+         
+        </div>
+          <button
+            onClick={handleCloseMessage}
+            className="w-6 h-6 top-2 right-2 ml-1 text-gray-600 bg-white shadow-md text-xs border border-blue-500 rounded-full py-0.5 px-1.5"
+          >
+           <i className="fas fa-xmark"></i>
+          </button>
+      </div>
+      )}
       <button
         ref={chatButtonRef}
         onClick={() => setIsOpen(true)}

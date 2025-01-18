@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import { Navbar } from './navigation/Navbar';
 import { Logo } from './home/Logo';
 
+
 export function Header() {
+
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto">
@@ -16,7 +18,9 @@ export function Header() {
         HouseGPT
       </h1>
           </Link>
+
           <Navbar />
+          
         </div>
       </div>
     </header>

@@ -16,6 +16,8 @@ import { PropertyTabs } from './PropertyTabs';
 import PropertyGallery from './PropertyGallery';
 import OverviewCard from './report/OverviewCardProps';
 import FloorPlan from './report/FloorPlan';
+import Amenities from './report/Amenities';
+import FAQ from './report/FAQ';
 import { PropertyChatButton } from './chat/PropertyChatButton';
 import { Property } from '../types';
 
@@ -38,6 +40,8 @@ export function PropertyDetail() {
   const descriptionRef = useRef<HTMLDivElement | null>(null);
   const floorPlanRef = useRef<HTMLDivElement | null>(null);
   const galleryRef = useRef<HTMLDivElement | null>(null);
+  const amenitiesRef = useRef<HTMLDivElement | null>(null);
+  const faqRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -47,7 +51,7 @@ export function PropertyDetail() {
           if (data) {
             setProperty({
               ...data,
-              imageUrl: data.image_url,
+              imageUrl: data.imageUrl,
               id: data.id,
               title: data.title,
               price: data.price,
@@ -94,6 +98,8 @@ export function PropertyDetail() {
       NearbyFacilities: nearbyRef,
       PropertyGraph: graphRef,
       LocalityStats: statsRef,
+      Amenities: amenitiesRef,
+      FAQ: faqRef
     };
 
     refs[tab as keyof typeof refs]?.current?.scrollIntoView({ behavior: 'smooth' });
@@ -164,12 +170,20 @@ export function PropertyDetail() {
             <PropertyGallery images={[]} />
           </div>
           
-          <div ref={graphRef}>
-            <PropertyGraph propertyId={property.id} />
-          </div>
-          
           <div ref={statsRef}>
             <LocalityStats propertyId={property.id} />
+          </div>
+
+           <div ref={amenitiesRef}>
+            <Amenities />
+          </div>
+
+          <div ref={faqRef}>
+            <FAQ />
+          </div>
+
+           <div ref={graphRef}>
+            <PropertyGraph propertyId={property.id} />
           </div>
 
           

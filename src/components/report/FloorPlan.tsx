@@ -40,11 +40,12 @@ const FloorPlan: React.FC = () => {
 
   return (
     <div className="rounded-lg border border-gray-300 bg-white shadow-lg overflow-hidden p-3 mt-4">
+       <h3 className="text-lg font-semibold">Floor Plan View</h3>
       <div className="tabs flex space-x-4 mb-4 border-b">
         {tabs.map((tab, index) => (
           <button
             key={tab.label}
-            className={`tab-btn py-2 px-4 text-lg font-semibold ${
+            className={`tab-btn py-2 px-4 font-semibold ${
               activeTab === index ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-600'
             }`}
             onClick={() => handleTabChange(index)}
@@ -54,8 +55,8 @@ const FloorPlan: React.FC = () => {
         ))}
       </div>
 
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold">Floor Plan View</h3>
+      <div className="flex items-center justify-end mb-4">
+       
         <label className="inline-flex items-center cursor-pointer">
           <span className="mr-2 text-sm">2D</span>
           <div className="relative">

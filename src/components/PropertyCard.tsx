@@ -13,7 +13,7 @@ export function PropertyCard({ property, compact = false }: PropertyCardProps) {
     <Link to={`/property/${property.id}`} className="block">
       <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow mb-0.5 border border-gray-200">
         <img
-          src={property.image_url}
+          src={property.imageUrl}
           alt={property.title}
           className={`w-full object-cover ${compact ? 'h-36' : 'h-48'}`}
         />

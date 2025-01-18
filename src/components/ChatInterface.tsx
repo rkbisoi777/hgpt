@@ -6,9 +6,13 @@ import { ChatService } from '../lib/chat/chatService';
 import { generateMessageId } from '../utils/messageUtils';
 import { toast } from 'react-hot-toast';
 import { ChatServiceError } from '../lib/chat/errors';
+import { useToken } from './TokenContext';
+
+const DAILY_LIMIT = 10000;
 
 interface ChatInterfaceProps {
   initialQuery?: string;
+  shouldSendInitialQuery?: boolean;
 }
 
 export function ChatInterface({ initialQuery }: ChatInterfaceProps) {
@@ -17,11 +21,44 @@ export function ChatInterface({ initialQuery }: ChatInterfaceProps) {
   const initialQueryProcessed = useRef(false);
   const [chatService, setChatService] = useState<ChatService | null>(null);
 
+  const { tokens, setTokens } = useToken(); // Using the global token state
+
+  const getCookie = (name: string): string | null => {
+    const cookies = document.cookie.split('; ');
+    for (const cookie of cookies) {
+      const [key, value] = cookie.split('=');
+      if (key === name) return decodeURIComponent(value);
+    }
+    return null;
+  };
+  
+  const setCookie = (name: string, value: string, days: number): void => {
+    const date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    document.cookie = `${name}=${encodeURIComponent(value)};expires=${date.toUTCString()};path=/`;
+  };
+
+  useEffect(() => {
+    const storedTokens = getCookie('HouseGPTTokens');
+    const lastReset = getCookie('lastReset');
+    const today = new Date().toISOString().split('T')[0];
+
+    if (!lastReset || lastReset !== today) {
+      // Reset the daily limit
+      setCookie('HouseGPTTokens', String(DAILY_LIMIT), 1);
+      setCookie('lastReset', today, 1);
+      setTokens(DAILY_LIMIT);
+    } else if (storedTokens) {
+      setTokens(Number(storedTokens));
+    }
+  }, [setTokens]);
+
   useEffect(() => {
     const initChatService = async () => {
       try {
         const service = await ChatService.getInstance();
         setChatService(service);
+         
       } catch (error) {
         toast.error('Failed to initialize chat service');
         console.error('Chat service initialization failed:', error);
@@ -30,10 +67,35 @@ export function ChatInterface({ initialQuery }: ChatInterfaceProps) {
     initChatService();
   }, []);
 
+  const subtractTokens = (amount: number): void => {
+    if (tokens - amount >= 0) {
+      const newTokenCount = tokens - amount;
+      setTokens(newTokenCount);
+      setCookie('HouseGPTTokens', String(newTokenCount), 1);
+    } else {
+      toast('Not enough tokens available.');
+    }
+  };
+
   useEffect(() => {
     if (initialQuery && !initialQueryProcessed.current && chatService) {
-      initialQueryProcessed.current = true;
-      handleSendMessage(initialQuery);
+      if(initialQuery !== "##**HouseGPT**#"){
+        initialQueryProcessed.current = true;
+        handleSendMessage(initialQuery);
+      }else{
+        setMessages([
+          {
+            id: generateMessageId(),
+            content: `Hi, I’m HouseGPT! I can help you find the perfect property and answer all your real estate questions with personalized recommendations. I can help you with:
+🏡 Find your dream property
+📊 Provide accurate property details
+💰 Share pricing and market trends
+And much more...
+What would you like to know?`,
+            role: 'assistant',
+          },
+        ]);
+      }
     }
   }, [initialQuery, chatService]);
 
@@ -51,15 +113,19 @@ export function ChatInterface({ initialQuery }: ChatInterfaceProps) {
     };
 
     setMessages(prev => [...prev, userMessage]);
-
+    
     try {
-      const { response, properties } = await chatService.processMessage(content);
+      const { response, properties, inputLength, outputLength } = await chatService.processMessage(content);
+      const tokensUsed = inputLength + outputLength;
+      subtractTokens(tokensUsed);
+
       const aiMessage: Message = {
         id: generateMessageId(),
         content: response,
         role: 'assistant',
         properties,
       };
+
       setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
       const errorMessage = error instanceof ChatServiceError
@@ -74,14 +140,10 @@ export function ChatInterface({ initialQuery }: ChatInterfaceProps) {
 
   return (
     <div className="flex flex-col h-full relative bg-gray-50">
-      <div className="flex-1 overflow-y-auto">
-        <MessageList 
-          messages={messages} 
-          isLoading={isLoading} 
-          onSendMessage={handleSendMessage}
-        />
-      </div>
-      <div className="sticky bottom-2 bg-white mx-1 border rounded-lg shadow-md">
+      <MessageList messages={messages} isLoading={isLoading} onSendMessage={handleSendMessage} />
+      
+      <div className="sticky bottom-1 bg-white mx-1 border rounded-lg shadow-md">
+        {/* <p><i className="fas fa-coins mr-1"></i>Tokens Available: {tokens}</p> */}
         <div className="max-w-4xl mx-auto w-full">
           <ChatInput onSend={handleSendMessage} disabled={isLoading} />
         </div>

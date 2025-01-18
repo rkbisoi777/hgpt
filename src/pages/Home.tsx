@@ -2,24 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TabSelector } from '../components/TabSelector';
 import { SearchForm } from '../components/SearchForm';
-import { ReportForm } from '../components/ReportForm';
+import { PropertiesTab } from '../components/PropertiesTab';
 import { getRandomProperty } from '../utils/propertyUtils';
 import { PremadeQuestions } from '../components/PremadeQuestions';
 import { LocationSelector } from '../components/LocationSelector';
 import { Logo } from '../components/home/Logo';
 import { propertyService } from '../lib/propertyService';
 import { PropertyGrid } from '../components/PropertyGrid';
+import { HomeChatButton } from '../components/chat/HomeChatButton';
 import { Award } from 'lucide-react';
+import { Property } from '../types';
+
 
 export function Home() {
   const [activeTab, setActiveTab] = useState<'search' | 'report'>('search');
   const navigate = useNavigate();
-  const [properties, setProperties] = useState([]);
+  const [properties, setProperties] = useState<Property[]>([]);
   
    useEffect(() => {
   const fetchProperties = async () => {
     try {
-      const props = await propertyService.searchProperties("Mumbai");
+      const props: Property[]= await propertyService.searchProperties("Mumbai");
       setProperties(props);
       console.log(props)
     } catch (error) {
@@ -49,36 +52,38 @@ export function Home() {
       </div>
 
       <div className="w-full max-w-xl">
-        {/* <TabSelector activeTab={activeTab} onTabChange={setActiveTab} /> */}
+        <TabSelector activeTab={activeTab} onTabChange={setActiveTab} />
         <div className="flex items-center justify-center">
           <p className="text-sm text-gray-600 mb-2">
             {activeTab === 'search'
               ? 'Find your dream home with AI assistance'
-              : 'Generate detailed property reports'}
+              : 'Best properties nearby'}
           </p>
         </div>
         {activeTab === 'search' ? (
           <>
             <SearchForm onSubmit={handleSearch} />
             <PremadeQuestions onQuestionClick={handleSearch} />
+            <div className="my-4 text-gray-500">
+              <div className="flex items-center gap-1 mb-2 text-gray-600">
+                <Award className="w-4 h-4" />
+                <span className="text-sm font-semibold">Top Properties in Mumbai</span>
+              </div>
+         
+              {properties && <PropertyGrid properties={properties} />}
+            </div>
           </>
         ) : (
           <>
-            <ReportForm onSubmit={handleReport} />
-            <PremadeQuestions onQuestionClick={handleSearch} />
+            {properties &&  <PropertiesTab onSubmit={handleReport} preloadedProperties={properties} />}
+
           </>
         )}
-        <div className="my-4 text-gray-500">
-          <div className="flex items-center gap-1 mb-2 text-gray-600">
-        <Award className="w-4 h-4" />
-        <span className="text-sm font-semibold">Top Properties in Mumbai</span>
-      </div>
-          
-         
-          <PropertyGrid properties={properties} />
-        </div>
+        
+        
         
       </div>
+      <HomeChatButton onSubmit={handleSearch} />
     </div>
   );
 }

@@ -10,7 +10,7 @@
       - `bedrooms` (integer)
       - `bathrooms` (numeric)
       - `sqft` (integer)
-      - `image_url` (text)
+      - `imageUrl` (text)
       - `description` (text)
       - `created_at` (timestamptz)
       - `updated_at` (timestamptz)
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS properties (
   bedrooms integer NOT NULL,
   bathrooms numeric NOT NULL,
   sqft integer NOT NULL,
-  image_url text NOT NULL,
+  imageUrl text NOT NULL,
   description text NOT NULL,
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()

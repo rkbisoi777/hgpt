@@ -10,7 +10,7 @@ export function SuggestedQuestions({ questions, onQuestionClick }: SuggestedQues
   if (!questions.length) return null;
 
   return (
-    <div className="mt-2">
+    <div className="mt-2 max-w-[80%]">
       <div className="flex items-center gap-1 mb-1">
         <MessageSquarePlus className="w-3.5 h-3.5 text-blue-500" />
         <span className="text-xs text-gray-600">Related Questions</span>

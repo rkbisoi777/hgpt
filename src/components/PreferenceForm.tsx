@@ -36,10 +36,11 @@ interface Preferences {
 
 interface PreferenceFormProps {
   onSubmit: (preferences: Preferences) => void;
+  answers: Record<string, string>;
   questions: string[];
 }
 
-export function PreferenceForm({ onSubmit, questions }: PreferenceFormProps) {
+export function PreferenceForm({ onSubmit, answers, questions }: PreferenceFormProps) {
   const [preferences, setPreferences] = useState<Preferences>(() => {
     const savedPreferences = getCookie('userPreferences');
     return savedPreferences
@@ -198,13 +199,13 @@ export function PreferenceForm({ onSubmit, questions }: PreferenceFormProps) {
   return (
     <div className="mt-2">
       {isSubmitted ? (
-        <div className="text-center w-full">
+        <div className="text-center w-full max-w-[80%]">
           <h2 className="text-sm text-blue-500 font-semibold">
             Thank you for sharing your preferences! HouseGPT will show the best properties based on your requirements.
           </h2>
         </div>
       ) : (
-        <div className="flex justify-start px-4 py-2 bg-white rounded-lg shadow-sm border border-gray-200">
+        <div className="flex justify-start px-4 py-2 bg-white rounded-lg shadow-sm border border-gray-200 max-w-[80%]">
           {renderQuestion()}
         </div>
       )}

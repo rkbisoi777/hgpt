@@ -26,7 +26,7 @@ export function PropertyGrid({ properties, maxInitialDisplay = 4 }: PropertyGrid
         </div>
       </div>
       {hasMore && (
-        <div className="text-right -mt-1.5">
+        <div className="text-left -mt-1.5">
           <Link
             to="/properties"
             state={{ properties }}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Home } from './pages/Home';
 import { Chat } from './pages/Chat';
 import { PropertyDetail } from './components/PropertyDetail';
@@ -15,7 +15,7 @@ function App() {
   return (
     <TokenProvider>
     <Layout>
-      <Routes>
+      <Router>
         <Route path="/" element={<Home />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/property/:id" element={<PropertyDetail />} />
@@ -23,7 +23,7 @@ function App() {
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/compare" element={<Compare />} />
         <Route path="/profile" element={<Profile />} />
-      </Routes>
+      </Router>
       <Toaster 
         position="top-center" 
         toastOptions={{

@@ -119,13 +119,22 @@ export function PropertyDetail() {
           <PropertyActions property={property} />
         </div>
 
-        <div className="aspect-video w-full rounded-lg overflow-hidden border border-gray-300">
+        {/* <div className="aspect-video w-full max-h-[400px] rounded-lg overflow-hidden border border-gray-300">
           <img
             src={property.imageUrl}
             alt={property.title}
             className="w-full h-full object-cover"
           />
-        </div>
+        </div> */}
+        <div className="aspect-video w-full max-h-[400px] rounded-lg overflow-hidden border border-gray-300">
+  <img
+    src={property.imageUrl}
+    alt={property.title || "Property Image"}
+    loading="lazy"
+    className="w-full h-full object-contain"
+  />
+</div>
+
 
         <div className="space-y-3">
           <PropertyHeader property={property} />

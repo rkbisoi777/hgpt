@@ -30,7 +30,7 @@ export function HomeChatButton({ onSubmit }: HomeChatButtonProps) {
     <>
       {/* Proactive message */}
       {showMessage && (
-      <div className="fixed bottom-16 right-8 flex flex-row z-50 w-1/2">
+      <div className="fixed bottom-20 right-6 flex flex-row z-50 w-[300px] max-w-1/2 animate-pulse">
         <div className=" px-2  bg-white text-gray-800 p-1 rounded-l-lg rounded-t-lg shadow-lg text-sm border border-blue-500 mb-2">
           <div className="flex flex-col">
             <span>Hi, I’m HouseGPT! 🏡 I can help you find the perfect property 🔍 and answer all your real estate questions 💬 with personalized recommendations 📊.</span>

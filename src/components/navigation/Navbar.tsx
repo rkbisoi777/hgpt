@@ -34,14 +34,15 @@ export function Navbar() {
     }
   }, [tokens, user]);
 
-  useEffect(() => {
-    if (user && !hasUpdatedTokens) { 
-      const newTokenCount = tokens + 10000;
-      setTokens(newTokenCount);
-      setHasUpdatedTokens(true);  
-      document.cookie = `HouseGPTTokens=${newTokenCount}; path=/; max-age=${60 * 60 * 24 * 365}`; 
-    }
-  }, [user, tokens, setTokens, hasUpdatedTokens]);
+  // useEffect(() => {
+  //   if (user && !hasUpdatedTokens) { 
+  //     const newTokenCount = tokens + 10000;
+  //     setTokens(newTokenCount);
+  //     setHasUpdatedTokens(true);  
+  //     // document.cookie = `HouseGPTTokens=${newTokenCount}; path=/; max-age=${60 * 60 * 24 * 365}`; 
+  //     document.cookie = `HouseGPTUserRegistered=true; path=/; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
+  //   }
+  // }, [user, tokens, setTokens, hasUpdatedTokens]);
 
   return (
     <>
@@ -57,19 +58,18 @@ export function Navbar() {
             <Link to="/wishlist">
               <NavbarIcon 
                 icon={Heart} 
-                label="Wishlist" 
                 count={wishlist.length} 
               />
             </Link>
             <Link to="/compare">
               <NavbarIcon 
                 icon={Scale} 
-                label="Compare" 
+                
                 count={compareList.length} 
               />
             </Link>
             <button onClick={() => setShowProfileSidebar(true)}>
-              <NavbarIcon icon={User} label="Profile" />
+              <NavbarIcon icon={User}  />
             </button>
           </>
         ) : (

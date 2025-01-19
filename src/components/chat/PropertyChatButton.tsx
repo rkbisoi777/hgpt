@@ -45,7 +45,7 @@ export function PropertyChatButton({ property }: PropertyChatButtonProps) {
       {/* Chat Button */}
        {showMessage && (
         
-      <div className="fixed bottom-16 right-8 flex flex-row z-50 w-1/2">
+      <div className="fixed bottom-20 right-6 flex flex-row z-50 w-[300px] max-w-1/2 animate-pulse">
         <div className=" px-2  bg-white text-gray-800 p-1 rounded-l-lg rounded-t-lg shadow-lg text-sm border border-blue-500 mb-2">
           <div className="flex flex-col">
             <span>Hi!, I’m HouseGPT! I can help with <b>{property.title}</b></span>
@@ -68,7 +68,7 @@ export function PropertyChatButton({ property }: PropertyChatButtonProps) {
       <button
         ref={chatButtonRef}
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-4 right-4 p-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors z-40"
+        className="fixed bottom-4 right-4 p-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors z-40 animate-bounce"
         aria-label="Chat about this property"
         aria-expanded={isOpen}
         aria-controls="property-chat-dialog"

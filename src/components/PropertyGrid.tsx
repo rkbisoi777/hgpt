@@ -21,7 +21,7 @@ export function PropertyGrid({ properties, maxInitialDisplay = 4 }: PropertyGrid
         <div className="grid grid-flow-col auto-cols-max gap-2 bg-gray-50">
           {displayedProperties.map(property => (
             // <PropertyCard key={property.id} property={property} compact />
-            <SmallPropertyCard key={property.id} property={property} compact />
+            <SmallPropertyCard key={property.id} property={property} />
           ))}
         </div>
       </div>

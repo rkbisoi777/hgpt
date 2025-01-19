@@ -4,22 +4,10 @@ import ProgressBar from './ProgressBar'
 import { Link } from 'react-router-dom';
 import { usePropertyStore } from '../store/propertyStore';
 import { toast } from 'react-hot-toast';
-import { convertToCroreAndLakh } from '../lib/utils';
+import { convertToCroreAndLakh, extractIndianCity } from '../lib/utils';
 
 
-function extractIndianCity(address: string | string[]) {
-  const indianCities = [
-    'Mumbai', 'Thane', 'Navi Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Chennai', 'Kolkata', 'Ahmedabad', 'Pune', 'Surat', 'Jaipur', 'Lucknow', 'Kanpur', 'Nagpur', 'Indore', 'Vadodara', 'Ghaziabad', 'Ludhiana', 'Agra', 'Nashik', 'Faridabad', 'Patna', 'Meerut', 'Rajkot', 'Vijayawada', 'Goa', 'Bhopal', 'Madurai', 'Coimbatore', 'Chandigarh', 'Visakhapatnam'
-  ];
 
-  for (let i = 0; i < indianCities.length; i++) {
-    if (address.includes(indianCities[i])) {
-      return indianCities[i];
-    }
-  }
-
-  return null; 
-}
 
 interface SmallPropertyCardProps {
   property: Property;

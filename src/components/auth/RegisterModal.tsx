@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { toast } from 'react-hot-toast';
 import { PhoneInput } from './PhoneInput';
+// import { useToken } from '../TokenContext';
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -15,12 +16,15 @@ export function RegisterModal({ isOpen, onClose, onLogin }: RegisterModalProps) 
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('+91 ');
   const { register, isLoading, error } = useAuthStore();
+  // const { tokens, setTokens } = useToken();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await register(email, password, phone.replace(/\s+/g, ''));
     if (!error) {
       toast.success('Registration successful');
+      onClose();      // document.cookie = `HouseGPTTokens=${tokens + 10000}; path=/; max-age=${60 * 60 * 24 * 365}`;
+      document.cookie = `HouseGPTUserRegistered=true; path=/; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
       onClose();
     }
   };

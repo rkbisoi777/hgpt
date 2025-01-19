@@ -43,7 +43,7 @@ export function Home() {
   };
 
   return (
-    <div className="min-h-50 flex flex-col items-center justify-center bg-white px-4">
+    <div className="min-h-50 flex flex-col items-center justify-center bg-white px-4 w-full">
       <div className="text-center mb-4 mt-[50px]">
         <Logo size={10} layout="col" />
         <div className="flex items-center justify-center gap-2 mt-4">
@@ -51,7 +51,7 @@ export function Home() {
         </div>
       </div>
 
-      <div className="w-full max-w-xl">
+      <div className="w-full max-w-6xl">
         <TabSelector activeTab={activeTab} onTabChange={setActiveTab} />
         <div className="flex items-center justify-center">
           <p className="text-sm text-gray-600 mb-2">
@@ -70,7 +70,7 @@ export function Home() {
                 <span className="text-sm font-semibold">Top Properties in Mumbai</span>
               </div>
          
-              {properties && <PropertyGrid properties={properties} />}
+              {properties && <PropertyGrid properties={properties} maxInitialDisplay={8}/>}
             </div>
           </>
         ) : (

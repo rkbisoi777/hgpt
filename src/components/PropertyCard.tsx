@@ -108,7 +108,7 @@ export function PropertyCard({ property, compact = false }: PropertyCardProps) {
                     alt="HouseGPT"
                     className="w-2 h-2"
                   /></div>
-                <span className="truncate font-semibold text-sm ml-1">{property.title}</span>
+                <span className="truncate font-bold text-base ml-1">{property.title}</span>
               </div>
               <div className='flex flex-row gap-1'>
               <div className="flex items-center">
@@ -122,15 +122,15 @@ export function PropertyCard({ property, compact = false }: PropertyCardProps) {
               </div>
               <div className="flex flex-row">
 
-                <div className="flex items-center mr-1 font-semibold">
+                <div className="flex items-center mr-2 font-semibold">
                   <Bed className="w-4 h-4 mr-1" />
                   <span>{property.bedrooms}</span>
                 </div>
-                <div className="flex items-center mr-1 font-semibold">
+                <div className="flex items-center mr-2 font-semibold">
                   <Bath className="w-4 h-4 mr-1" />
                   <span>{property.bathrooms}</span>
                 </div>
-                <div className="flex items-center mr-1 mt-0.5 font-semibold">
+                <div className="flex items-center mr-2 mt-0.5 font-semibold">
                   <Square className="w-4 h-4 mr-1" />
                   <span>{property.sqft}</span>
                 </div>

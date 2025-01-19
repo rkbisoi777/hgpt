@@ -4,6 +4,7 @@ import ProgressBar from './ProgressBar'
 import { Link } from 'react-router-dom';
 import { usePropertyStore } from '../store/propertyStore';
 import { toast } from 'react-hot-toast';
+import { convertToCroreAndLakh } from '../lib/utils';
 
 
 function extractIndianCity(address: string | string[]) {
@@ -68,7 +69,7 @@ export function SmallPropertyCard({ property }: SmallPropertyCardProps) {
             className="w-full h-full object-cover"
           />
 
-          <div className="absolute inset-0 bg-black bg-opacity-20 flex flex-col justify-between p-3 text-white">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex flex-col justify-between p-3 text-white">
 
             <div className="absolute flex flex-col top-2 right-2 space-y-1">
               {/* <button
@@ -88,7 +89,7 @@ export function SmallPropertyCard({ property }: SmallPropertyCardProps) {
                   event.stopPropagation();
                   handleWishlistClick()
                 }}
-                className="p-1 rounded-full hover:bg-red-200 hover:bg-opacity-30"
+                className="p-1 rounded-full bg-black bg-opacity-20 hover:bg-red-200 hover:bg-opacity-30 shadow-lg border border-white rounded full"
                 aria-label="Like property"
               >
                 <Heart className="w-4 h-4 text-white" />
@@ -99,17 +100,18 @@ export function SmallPropertyCard({ property }: SmallPropertyCardProps) {
                   event.stopPropagation();
                   handleCompareClick()
                 }}
-                className="p-1 rounded-full hover:bg-blue-200 hover:bg-opacity-30"
+                className="p-1 rounded-full hover:bg-blue-200 hover:bg-opacity-30 shadow-lg bg-black bg-opacity-20 border border-white rounded full"
                 aria-label="Compare property"
               >
                 <Scale className="w-4 h-4 text-white" />
               </button>
             </div>
 
-            <div className="absolute bottom-2 left-2 text-xs space-y-1">
+            <div className="absolute bottom-2 left-2 text-xs space-y-1 ">
               {/* <div className="flex items-center">
                 <span className="truncate font-semibold">{property.title}</span>
               </div> */}
+              
               <div className="flex items-center">
                 <div
                   className={`bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full flex items-center justify-center p-1 `}
@@ -119,24 +121,29 @@ export function SmallPropertyCard({ property }: SmallPropertyCardProps) {
                     alt="HouseGPT"
                     className="w-2 h-2"
                   /></div>
-                <span className="truncate text-xs ml-1">{property.title}</span>
+                <span className="truncate font-semibold text-xs ml-1">{property.title}</span>
               </div>
-
+              <div className='flex flex-row gap-1'>
               <div className="flex items-center">
-                <MapPin className="w-3 h-3 mr-1" />
-                <span className="truncate text-[10px]">{extractIndianCity(property.location)}</span>
+                <span className="truncate font-bold text-[10px] text-sky-600 bg-white px-1 rounded bg-opacity-80">{convertToCroreAndLakh(property.price)}</span>
+              </div>
+              
+              <div className="flex items-center">
+                <MapPin className="w-[10px] h-[10px] mr-0.5 mt-[1px]" />
+                <span className="truncate font-semibold text-[10px]">{extractIndianCity(property.location)}</span>
+              </div>
               </div>
               <div className="flex flex-row">
 
-                <div className="flex items-center mr-1">
+                <div className="flex items-center mr-1 font-semibold">
                   <Bed className="w-3 h-3 mr-1" />
                   <span>{property.bedrooms}</span>
                 </div>
-                <div className="flex items-center mr-1">
+                <div className="flex items-center mr-1 font-semibold">
                   <Bath className="w-3 h-3 mr-1" />
                   <span>{property.bathrooms}</span>
                 </div>
-                <div className="flex items-center mr-1 mt-0.5">
+                <div className="flex items-center mr-1 mt-0.5 font-semibold">
                   <Square className="w-3 h-3 mr-1" />
                   <span>{property.sqft}</span>
                 </div>
@@ -144,7 +151,7 @@ export function SmallPropertyCard({ property }: SmallPropertyCardProps) {
             </div>
             <ProgressBar percentage={67} />
 
-            <div className="absolute bottom-2 right-2">
+            {/* <div className="absolute bottom-2 right-2">
               <button
                 className={`bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full flex items-center justify-center p-1 animate-bounce`}
 
@@ -155,7 +162,7 @@ export function SmallPropertyCard({ property }: SmallPropertyCardProps) {
                   className="w-4 h-4"
                 />
               </button>
-            </div>
+            </div> */}
 
           </div>
         </div>

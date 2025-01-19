@@ -152,7 +152,7 @@
 //   );
 // }
 
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Message } from '../types';
 import { ChatInput } from './ChatInput';
 import { MessageList } from './MessageList';

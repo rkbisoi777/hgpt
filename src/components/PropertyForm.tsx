@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { toast } from 'react-hot-toast';
+import { useAuthStore } from '../store/authStore';
 
 export function PropertyForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    property_name: '',
     title: '',
     developer_name: '',
     location: '',
@@ -98,6 +98,8 @@ export function PropertyForm() {
     }
   };
 
+  const {user} = useAuthStore();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -126,9 +128,8 @@ export function PropertyForm() {
       
       // Reset form
       setFormData({
-        property_name: '',
         title: '',
-        developer_name: '',
+        developer_name: user?.id.toString(),
         location: '',
         price: '',
         area: '',
@@ -172,18 +173,18 @@ export function PropertyForm() {
           <h3 className="text-lg font-semibold mb-4">Basic Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Property Name *</label>
+              <label className="block text-sm font-medium mb-1">Title/Name *</label>
               <input
                 type="text"
-                name="property_name"
-                value={formData.property_name}
+                name="title"
+                value={formData.title}
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border rounded-md"
                 required
               />
             </div>
             
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium mb-1">Developer Name *</label>
               <input
                 type="text"
@@ -193,7 +194,7 @@ export function PropertyForm() {
                 className="w-full px-3 py-2 border rounded-md"
                 required
               />
-            </div>
+            </div> */}
 
             <div>
               <label className="block text-sm font-medium mb-1">Property Type *</label>

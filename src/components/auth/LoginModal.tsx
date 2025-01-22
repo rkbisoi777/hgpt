@@ -123,11 +123,6 @@ export function LoginModal({ isOpen, onClose, onRegister }: LoginModalProps) {
       setEmail('');
       setPassword('');
       toast.success('Successfully logged in!');
-      
-      // Redirect developers to their dashboard
-      if (role === 'developer') {
-        navigate('/developer/dashboard');
-      }
     }
   }, [user, onClose, navigate, role]);
 

@@ -6,7 +6,7 @@
     - Links to auth.users and properties tables
   
   2. Changes
-    - Add developer_id to properties table
+    - Add developer_name to properties table
     - Add RLS policies for developers
 */
 
@@ -28,9 +28,9 @@ CREATE TABLE IF NOT EXISTS developers (
   updated_at timestamptz DEFAULT now()
 );
 
--- Add developer_id to properties
+-- Add developer_name to properties
 ALTER TABLE properties
-ADD COLUMN IF NOT EXISTS developer_id uuid REFERENCES developers(id);
+ADD COLUMN IF NOT EXISTS developer_name uuid REFERENCES developers(id);
 
 -- Enable RLS
 ALTER TABLE developers ENABLE ROW LEVEL SECURITY;
@@ -59,19 +59,19 @@ CREATE POLICY "Developers can insert their own properties"
   ON properties
   FOR INSERT
   TO authenticated
-  WITH CHECK (auth.uid() = developer_id);
+  WITH CHECK (auth.uid() = developer_name);
 
 CREATE POLICY "Developers can update their own properties"
   ON properties
   FOR UPDATE
   TO authenticated
-  USING (auth.uid() = developer_id);
+  USING (auth.uid() = developer_name);
 
 CREATE POLICY "Developers can delete their own properties"
   ON properties
   FOR DELETE
   TO authenticated
-  USING (auth.uid() = developer_id);
+  USING (auth.uid() = developer_name);
 
 -- Add custom type for user roles
 CREATE TYPE user_role AS ENUM ('user', 'developer', 'admin');

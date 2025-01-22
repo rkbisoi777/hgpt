@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Property } from '../types';
@@ -6,9 +6,11 @@ import { Developer } from '../types/auth';
 import { Building, Plus, Settings, BarChart2 } from 'lucide-react';
 import { PropertyCard } from '../components/PropertyCard';
 import { toast } from 'react-hot-toast';
+import { useAuthStore } from '../store/authStore';
 
 export function DeveloperDashboard() {
   const navigate = useNavigate();
+  const { user } = useAuthStore();
   const [developer, setDeveloper] = useState<Developer | null>(null);
   const [properties, setProperties] = useState<Property[]>([]);
   const [stats, setStats] = useState({
@@ -21,8 +23,7 @@ export function DeveloperDashboard() {
   useEffect(() => {
     const fetchDeveloperData = async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) {
+        if (!user || user.role !== 'developer') {
           navigate('/');
           return;
         }
@@ -39,17 +40,16 @@ export function DeveloperDashboard() {
         const { data: propertiesData, error: propertiesError } = await supabase
           .from('properties')
           .select('*')
-          .eq('developer_id', user.id);
+          .eq('developer_name', user.id);
 
         if (propertiesError) throw propertiesError;
         setProperties(propertiesData);
 
-        // Update stats
         setStats({
           totalProperties: propertiesData.length,
           activeListings: propertiesData.filter(p => p.status === 'Active').length,
-          totalViews: Math.floor(Math.random() * 1000), // Mock data
-          inquiries: Math.floor(Math.random() * 100) // Mock data
+          totalViews: Math.floor(Math.random() * 1000),
+          inquiries: Math.floor(Math.random() * 100)
         });
 
       } catch (error) {
@@ -59,7 +59,15 @@ export function DeveloperDashboard() {
     };
 
     fetchDeveloperData();
-  }, [navigate]);
+  }, [navigate, user]);
+
+  const handleAddProperty = () => {
+    if (user?.role === 'developer') {
+      navigate('/developer/add-property', { replace: true });
+    } else {
+      toast.error('You must be logged in as a developer to add properties');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -72,7 +80,7 @@ export function DeveloperDashboard() {
           </div>
           <div className="flex gap-3">
             <button
-              onClick={() => navigate('/add-property')}
+              onClick={handleAddProperty}
               className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
             >
               <Plus className="w-4 h-4" />
@@ -144,7 +152,7 @@ export function DeveloperDashboard() {
               <Building className="w-12 h-12 text-gray-400 mx-auto mb-3" />
               <p className="text-gray-500">No properties listed yet</p>
               <button
-                onClick={() => navigate('/add-property')}
+                onClick={handleAddProperty}
                 className="mt-2 text-blue-500 hover:underline"
               >
                 Add your first property

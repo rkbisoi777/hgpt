@@ -28,7 +28,7 @@ export function DeveloperProfile() {
         const { data: propertiesData, error: propertiesError } = await supabase
           .from('properties')
           .select('*')
-          .eq('developer_id', id);
+          .eq('developer_name', id);
 
         if (propertiesError) throw propertiesError;
         setProperties(propertiesData);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, User, Heart, Scale, LogOut } from 'lucide-react';
+import { X, User, Heart, Scale, LogOut, Plus, LayoutDashboard } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { ProfileMenuItem } from './ProfileMenuItem';
 import { useNavigate } from 'react-router-dom';
@@ -61,18 +61,30 @@ export function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps) {
               label="My Profile" 
               onClick={handleProfileClick}
             />
-            <ProfileMenuItem 
+             {user?.role == 'user' && (<ProfileMenuItem 
               icon={Heart} 
               label="Wishlist" 
               onClick={onClose} 
               to="/wishlist"
-            />
-            <ProfileMenuItem 
+            />)}
+             {user?.role == 'user' && (<ProfileMenuItem 
               icon={Scale} 
               label="Compare" 
               onClick={onClose} 
               to="/compare"
-            />
+            />)}
+            {user?.role == 'developer' && (<ProfileMenuItem 
+              icon={LayoutDashboard} 
+              label="Dashboard" 
+              onClick={onClose} 
+              to="/developer/dashboard"
+            />)}
+            {user?.role == 'developer' && (<ProfileMenuItem 
+              icon={Plus} 
+              label="Add Property" 
+              onClick={onClose} 
+              to="/developer/add-property"
+            />)}
             <ProfileMenuItem 
               icon={LogOut} 
               label="Logout" 

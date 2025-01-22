@@ -55,19 +55,19 @@ export function Navbar() {
         
         {user ? (
           <>
-            <Link to="/wishlist">
+             {user?.role == 'user' && (<Link to="/wishlist">
               <NavbarIcon 
                 icon={Heart} 
                 count={wishlist.length} 
               />
-            </Link>
-            <Link to="/compare">
+            </Link>)}
+            {user?.role == 'user' && (<Link to="/compare">
               <NavbarIcon 
                 icon={Scale} 
                 
                 count={compareList.length} 
               />
-            </Link>
+            </Link>)}
             <button onClick={() => setShowProfileSidebar(true)}>
               <NavbarIcon icon={User}  />
             </button>

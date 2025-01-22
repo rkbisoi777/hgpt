@@ -13,35 +13,75 @@ import { AddProperty } from './pages/AddProperty';
 import { DeveloperRegistration } from './pages/DeveloperRegistration';
 import { DeveloperDashboard } from './pages/DeveloperDashboard';
 import { DeveloperProfile } from './pages/DeveloperProfile';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 function App() {
   return (
     <TokenProvider>
-    <Layout>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/chat" element={<Chat />} />
-        <Route path="/property/:id" element={<PropertyDetail />} />
-        <Route path="/properties" element={<Properties />} />
-        <Route path="/wishlist" element={<Wishlist />} />
-        <Route path="/compare" element={<Compare />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/add-property" element={<AddProperty />} />
-        <Route path="/developer/register" element={<DeveloperRegistration />} />
-        <Route path="/developer/dashboard" element={<DeveloperDashboard />} />
-        <Route path="/developer/:id" element={<DeveloperProfile />} />
-      </Routes>
-      <Toaster 
-        position="top-center" 
-        toastOptions={{
-          style: {
-            border: '2px solid #338af1', // Blue border
-            padding: '3px',
-            borderRadius: '8px',
-          }
-        }} 
-      />
-    </Layout>
+      <Layout>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/property/:id" element={<PropertyDetail />} />
+          <Route path="/properties" element={<Properties />} />
+          <Route path="/developer/:id" element={<DeveloperProfile />} />
+          <Route path="/developer/register" element={<DeveloperRegistration />}/>
+
+          {/* Protected Routes */}
+          <Route
+            path="/wishlist"
+            element={
+              <ProtectedRoute>
+                <Wishlist />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/compare"
+            element={
+              <ProtectedRoute>
+                <Compare />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/developer/add-property"
+            element={
+              <ProtectedRoute>
+                <AddProperty />
+              </ProtectedRoute>
+            }
+          />
+         
+          <Route
+            path="/developer/dashboard"
+            element={
+              <ProtectedRoute>
+                <DeveloperDashboard />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            style: {
+              border: '2px solid #338af1',
+              padding: '3px',
+              borderRadius: '8px',
+            },
+          }}
+        />
+      </Layout>
     </TokenProvider>
   );
 }

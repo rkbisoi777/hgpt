@@ -9,6 +9,10 @@ import { Profile } from './pages/Profile';
 import { Toaster } from 'react-hot-toast';
 import { Layout } from './components/layout/Layout';
 import { TokenProvider } from './components/TokenContext';
+import { AddProperty } from './pages/AddProperty';
+import { DeveloperRegistration } from './pages/DeveloperRegistration';
+import { DeveloperDashboard } from './pages/DeveloperDashboard';
+import { DeveloperProfile } from './pages/DeveloperProfile';
 
 function App() {
   return (
@@ -22,6 +26,10 @@ function App() {
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/compare" element={<Compare />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/add-property" element={<AddProperty />} />
+        <Route path="/developer/register" element={<DeveloperRegistration />} />
+        <Route path="/developer/dashboard" element={<DeveloperDashboard />} />
+        <Route path="/developer/:id" element={<DeveloperProfile />} />
       </Routes>
       <Toaster 
         position="top-center" 

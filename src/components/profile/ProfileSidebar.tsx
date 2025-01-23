@@ -1,4 +1,3 @@
-import React from 'react';
 import { X, User, Heart, Scale, LogOut, Plus, LayoutDashboard } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { ProfileMenuItem } from './ProfileMenuItem';
@@ -19,7 +18,11 @@ export function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps) {
   };
 
   const handleProfileClick = () => {
-    navigate('/profile');
+    if(user?.role === 'developer'){
+      navigate(`/developer/${user.id}`)
+    }else{
+      navigate('/profile');
+    }
     onClose();
   };
 

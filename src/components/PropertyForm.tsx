@@ -5,9 +5,9 @@ import { useAuthStore } from '../store/authStore';
 
 export function PropertyForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const { user } = useAuthStore(); // Get the current user from auth store
   const [formData, setFormData] = useState({
     title: '',
-    developer_name: '',
     location: '',
     price: '',
     area: '',
@@ -15,7 +15,7 @@ export function PropertyForm() {
     bathrooms: '',
     property_type: '',
     status: '',
-    amenities: [],
+    amenities: [] as string[],
     possession_date: '',
     furnishing_status: '',
     property_url: '',
@@ -84,24 +84,28 @@ export function PropertyForm() {
     }));
   };
 
-  const handleTagInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && e.currentTarget.value) {
-      e.preventDefault();
-      const newTag = e.currentTarget.value.trim();
-      if (!formData.tags.includes(newTag)) {
-        setFormData(prev => ({
-          ...prev,
-          tags: [...prev.tags, newTag]
-        }));
-      }
-      e.currentTarget.value = '';
-    }
-  };
-
-  const {user} = useAuthStore();
+  // const handleTagInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  //   if (e.key === 'Enter' && e.currentTarget.value) {
+  //     e.preventDefault();
+  //     const newTag = e.currentTarget.value.trim();
+  //     if (!formData.tags.includes(newTag)) {
+  //       setFormData(prev => ({
+  //         ...prev,
+  //         tags: [...prev.tags, newTag]
+  //       }));
+  //     }
+  //     e.currentTarget.value = '';
+  //   }
+  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!user?.id) {
+      toast.error('You must be logged in to add a property');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -109,6 +113,7 @@ export function PropertyForm() {
         .from('properties')
         .insert([{
           ...formData,
+          developer_name: user.id, // Set the developer_name to the user's ID
           price: parseFloat(formData.price),
           area: parseFloat(formData.area),
           bedrooms: parseInt(formData.bedrooms),
@@ -129,7 +134,6 @@ export function PropertyForm() {
       // Reset form
       setFormData({
         title: '',
-        developer_name: user?.id.toString(),
         location: '',
         price: '',
         area: '',
@@ -183,18 +187,6 @@ export function PropertyForm() {
                 required
               />
             </div>
-            
-            {/* <div>
-              <label className="block text-sm font-medium mb-1">Developer Name *</label>
-              <input
-                type="text"
-                name="developer_name"
-                value={formData.developer_name}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border rounded-md"
-                required
-              />
-            </div> */}
 
             <div>
               <label className="block text-sm font-medium mb-1">Property Type *</label>

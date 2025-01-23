@@ -14,8 +14,16 @@ import { DeveloperRegistration } from './pages/DeveloperRegistration';
 import { DeveloperDashboard } from './pages/DeveloperDashboard';
 import { DeveloperProfile } from './pages/DeveloperProfile';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { useEffect } from 'react';
+import { useAuthStore } from './store/authStore';
 
 function App() {
+  const { initializeSession } = useAuthStore();
+
+  useEffect(() => {
+    initializeSession();
+  }, [initializeSession]);
+
   return (
     <TokenProvider>
       <Layout>

@@ -28,6 +28,7 @@ export function DeveloperDashboard() {
           return;
         }
 
+        // Fetch developer profile
         const { data: developerData, error: developerError } = await supabase
           .from('developers')
           .select('*')
@@ -37,19 +38,25 @@ export function DeveloperDashboard() {
         if (developerError) throw developerError;
         setDeveloper(developerData);
 
+        // Fetch properties with developer_name matching the user's ID
         const { data: propertiesData, error: propertiesError } = await supabase
           .from('properties')
           .select('*')
-          .eq('developer_name', user.id);
+          .eq('developer_name', user.id)
+          .order('created_at', { ascending: false });
 
         if (propertiesError) throw propertiesError;
-        setProperties(propertiesData);
+        
+        // Ensure propertiesData is not null before setting
+        const validProperties = propertiesData || [];
+        setProperties(validProperties);
 
+        // Update stats
         setStats({
-          totalProperties: propertiesData.length,
-          activeListings: propertiesData.filter(p => p.status === 'Active').length,
-          totalViews: Math.floor(Math.random() * 1000),
-          inquiries: Math.floor(Math.random() * 100)
+          totalProperties: validProperties.length,
+          activeListings: validProperties.filter(p => p.status === 'Active').length,
+          totalViews: Math.floor(Math.random() * 1000), // Mock data
+          inquiries: Math.floor(Math.random() * 100) // Mock data
         });
 
       } catch (error) {
@@ -63,7 +70,7 @@ export function DeveloperDashboard() {
 
   const handleAddProperty = () => {
     if (user?.role === 'developer') {
-      navigate('/developer/add-property', { replace: true });
+      navigate('/developer/add-property');
     } else {
       toast.error('You must be logged in as a developer to add properties');
     }
@@ -160,7 +167,7 @@ export function DeveloperDashboard() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {properties.slice(0, 3).map(property => (
+              {properties.map(property => (
                 <PropertyCard key={property.id} property={property} />
               ))}
             </div>

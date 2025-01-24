@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase';
 import { Property } from '../types';
 import { Developer } from '../types/auth';
 import { Building, Plus, Settings, BarChart2 } from 'lucide-react';
-import { PropertyCard } from '../components/PropertyCard';
+import { PropertyCard } from '../components/property/PropertyCard';
 import { toast } from 'react-hot-toast';
 import { useAuthStore } from '../store/authStore';
 

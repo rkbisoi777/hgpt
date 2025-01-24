@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Developer } from '../types/auth';
 import { Property } from '../types';
-import { PropertyCard } from '../components/PropertyCard';
+import { PropertyCard } from '../components/property/PropertyCard';
 import { Globe, Mail, Phone, MapPin, Building } from 'lucide-react';
 import { DeveloperChatButton } from '../components/chat/DeveloperChatButton';
 

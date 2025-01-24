@@ -1,6 +1,6 @@
 import React from 'react';
 import { Bed, Bath, Square } from 'lucide-react';
-import { Property } from '../types';
+import { Property } from '../../types';
 
 interface PropertyStatsProps {
   property: Property;

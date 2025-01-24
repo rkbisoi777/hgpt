@@ -1,60 +1,61 @@
-import React from 'react';
-import { Bed, Bath, Square, MapPin, Heart, Scale } from 'lucide-react';
-import { Property } from '../types';
+import { Bed, Bath, Square, MapPin, MoreHorizontal, Heart, Scale } from 'lucide-react';
+import { Property } from '../../types';
+import ProgressBar from '../ProgressBar'
 import { Link } from 'react-router-dom';
-import { usePropertyStore } from '../store/propertyStore';
-import toast from 'react-hot-toast';
-import ProgressBar from './ProgressBar';
-import { convertToCroreAndLakh, extractIndianCity } from '../lib/utils';
+import { usePropertyStore } from '../../store/propertyStore';
+import { toast } from 'react-hot-toast';
+import { convertToCroreAndLakh, extractIndianCity } from '../../lib/utils';
 
-interface PropertyCardProps {
+
+
+
+interface SmallPropertyCardProps {
   property: Property;
-  compact?: boolean;
 }
 
-export function PropertyCard({ property, compact = false }: PropertyCardProps) {
+export function SmallPropertyCard({ property }: SmallPropertyCardProps) {
   const { 
-    addToWishlist, 
-    removeFromWishlist, 
-    addToCompare, 
-    removeFromCompare,
-    isInWishlist,
-    isInCompareList
-  } = usePropertyStore();
+      addToWishlist, 
+      removeFromWishlist, 
+      addToCompare, 
+      removeFromCompare,
+      isInWishlist,
+      isInCompareList
+    } = usePropertyStore();
 
-  const handleWishlistClick = () => {
-    if (isInWishlist(property.id)) {
-      removeFromWishlist(property.id);
-      toast.success('Removed from wishlist');
-    } else {
-      addToWishlist(property);
-      toast.success('Added to wishlist');
-    }
-  };
-
-  const handleCompareClick = () => {
-    if (isInCompareList(property.id)) {
-      removeFromCompare(property.id);
-      toast.success('Removed from compare list');
-    } else {
-      const added = addToCompare(property);
-      if (added) {
-        toast.success('Added to compare list');
+    const handleWishlistClick = () => {
+      if (isInWishlist(property.id)) {
+        removeFromWishlist(property.id);
+        toast.success('Removed from wishlist');
       } else {
-        toast.error('Compare list is full (max 5 properties)');
+        addToWishlist(property);
+        toast.success('Added to wishlist');
       }
-    }
-  };
+    };
+  
+    const handleCompareClick = () => {
+      if (isInCompareList(property.id)) {
+        removeFromCompare(property.id);
+        toast.success('Removed from compare list');
+      } else {
+        const added = addToCompare(property);
+        if (added) {
+          toast.success('Added to compare list');
+        } else {
+          toast.error('Compare list is full (max 5 properties)');
+        }
+      }
+    };
+
   return (
-    <Link to={`/property/${property.id}`} className="block">
-      
-      <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 relative w-full h-80"> {/* Set fixed height */}
-  <div className="relative w-full h-full"> 
-    <img
-      src={property.imageUrl}
-      alt={property.title}
-      className="w-full h-full object-cover" 
-    />
+    <Link to={`/property/${property.id}`} className="block relative">
+      <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 relative w-44 h-60">
+        <div className="relative w-full h-full">
+          <img
+            src={property.imageUrl}
+            alt={property.title}
+            className="w-full h-full object-cover"
+          />
 
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex flex-col justify-between p-3 text-white">
 
@@ -108,30 +109,30 @@ export function PropertyCard({ property, compact = false }: PropertyCardProps) {
                     alt="HouseGPT"
                     className="w-2 h-2"
                   /></div>
-                <span className="truncate font-bold text-base ml-1">{property.title}</span>
+                <span className="truncate font-semibold text-xs ml-1">{property.title}</span>
               </div>
               <div className='flex flex-row gap-1'>
               <div className="flex items-center">
-                <span className="truncate font-bold text-sm text-sky-600 bg-white px-1 rounded bg-opacity-80">{convertToCroreAndLakh(property.price)}</span>
+                <span className="truncate font-bold text-[10px] text-sky-600 bg-white px-1 rounded bg-opacity-80">{convertToCroreAndLakh(property.price)}</span>
               </div>
               
               <div className="flex items-center">
                 <MapPin className="w-[10px] h-[10px] mr-0.5 mt-[1px]" />
-                <span className="truncate font-semibold text-sm">{extractIndianCity(property.location)}</span>
+                <span className="truncate font-semibold text-[10px]">{extractIndianCity(property.location)}</span>
               </div>
               </div>
               <div className="flex flex-row">
 
-                <div className="flex items-center mr-2 font-semibold">
-                  <Bed className="w-4 h-4 mr-1" />
+                <div className="flex items-center mr-1 font-semibold">
+                  <Bed className="w-3 h-3 mr-1" />
                   <span>{property.bedrooms}</span>
                 </div>
-                <div className="flex items-center mr-2 font-semibold">
-                  <Bath className="w-4 h-4 mr-1" />
+                <div className="flex items-center mr-1 font-semibold">
+                  <Bath className="w-3 h-3 mr-1" />
                   <span>{property.bathrooms}</span>
                 </div>
-                <div className="flex items-center mr-2 mt-0.5 font-semibold">
-                  <Square className="w-4 h-4 mr-1" />
+                <div className="flex items-center mr-1 mt-0.5 font-semibold">
+                  <Square className="w-3 h-3 mr-1" />
                   <span>{property.sqft}</span>
                 </div>
               </div>
@@ -152,6 +153,13 @@ export function PropertyCard({ property, compact = false }: PropertyCardProps) {
             </div> */}
 
           </div>
+        </div>
+
+        <div className="p-3 text-xs">
+          <h3 className="font-semibold text-sm">{property.title}</h3>
+          <p className="font-bold text-sm mt-1">
+            ₹{property.price.toLocaleString()}
+          </p>
         </div>
       </div>
     </Link>

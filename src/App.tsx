@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { Home } from './pages/Home';
 import { Chat } from './pages/Chat';
-import { PropertyDetail } from './components/PropertyDetail';
+import { PropertyDetail } from './components/property/PropertyDetail';
 import { Wishlist } from './pages/Wishlist';
 import { Compare } from './pages/Compare';
 import { Properties } from './pages/Properties';
@@ -16,6 +16,8 @@ import { DeveloperProfile } from './pages/DeveloperProfile';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { useEffect } from 'react';
 import { useAuthStore } from './store/authStore';
+import { LoginPage } from './components/auth/LoginPage';
+import { RegisterPage } from './components/auth/RegisterPage';
 
 function App() {
   const { initializeSession } = useAuthStore();
@@ -31,6 +33,8 @@ function App() {
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/login" element={<LoginPage/> }/>
+          <Route path="/register" element={<RegisterPage/>} />
           <Route path="/property/:id" element={<PropertyDetail />} />
           <Route path="/properties" element={<Properties />} />
           <Route path="/developer/:id" element={<DeveloperProfile />} />

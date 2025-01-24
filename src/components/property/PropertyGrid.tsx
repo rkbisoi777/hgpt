@@ -1,6 +1,6 @@
-import React from 'react';
-import { Property } from '../types';
-import { PropertyCard } from './PropertyCard';
+// import React from 'react';
+import { Property } from '../../types';
+// import { PropertyCard } from './PropertyCard';
 import { SmallPropertyCard } from './SmallPropertyCard';
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';

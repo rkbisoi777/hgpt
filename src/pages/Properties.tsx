@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Property } from '../types';
-import { PropertyCard } from '../components/PropertyCard';
-import { ArrowLeft, SlidersHorizontal } from 'lucide-react';
-import { PropertyFilter } from '../components/PropertyFilter'; // Import the new filter component
-import { applyPropertyFilter } from '../utils/filterProperties'; // Import the utility function
+import { PropertyCard } from '../components/property/PropertyCard';
+import { ArrowLeft, Filter } from 'lucide-react';
+import { PropertyFilter } from '../components/property/PropertyFilter'; 
+import { applyPropertyFilter } from '../utils/filterProperties'; 
 
 interface PropertiesProps {
   fromHome?: boolean;
@@ -18,9 +18,9 @@ export function Properties({ fromHome = false, preloadedProperties }: Properties
   const [filteredProperties, setFilteredProperties] = useState<Property[] | null>(null);
   const [filterOpen, setFilterOpen] = useState(false);
   const [filters, setFilters] = useState({
-    priceRange: [0, 100000], // min and max price
+    priceRange: [0, 100000], 
     furnished: false,
-    bedrooms: 0, // 0 means no filter
+    bedrooms: 0, 
   });
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export function Properties({ fromHome = false, preloadedProperties }: Properties
   };
 
   if (!properties) {
-    return null; // Prevent rendering while redirecting or properties are undefined
+    return null; 
   }
 
   return (
@@ -75,16 +75,14 @@ export function Properties({ fromHome = false, preloadedProperties }: Properties
         )}
       </div>
 
-      {/* Floating Filter Button */}
       <button
         onClick={() => setFilterOpen(true)}
-        className="fixed bottom-4 left-4 bg-white text-blue-600 rounded-full p-3 shadow-lg hover:bg-gray-50 shadow-md"
+        className="fixed bottom-4 left-4 bg-white text-blue-600 border border-gray-200 rounded-full p-3 shadow-lg hover:bg-gray-50"
         aria-label="Open filter options"
       >
-        <SlidersHorizontal className='w-6 h-6' />
+        <Filter  className='w-5 h-5' />
       </button>
 
-      {/* Property Filter Popup */}
       {filterOpen && (
         <PropertyFilter
           filters={filters}

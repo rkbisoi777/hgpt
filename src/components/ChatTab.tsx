@@ -1,11 +1,10 @@
 import React from 'react';
-import { Search } from 'lucide-react';
 
-interface SearchFormProps {
+interface ChatTabProps {
   onSubmit: (query: string) => void;
 }
 
-export function SearchForm({ onSubmit }: SearchFormProps) {
+export function ChatTab({ onSubmit }: ChatTabProps) {
   const [query, setQuery] = React.useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -22,7 +21,7 @@ export function SearchForm({ onSubmit }: SearchFormProps) {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Enter your property requirements..."
+          placeholder="Help me find my perfect property, HouseGPT! 🏡✨"
           className="flex-1 px-3 py-2 text-sm rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
         />
         <button

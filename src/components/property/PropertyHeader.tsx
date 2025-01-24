@@ -1,6 +1,6 @@
 import React from 'react';
 import { MapPin } from 'lucide-react';
-import { Property } from '../types';
+import { Property } from '../../types';
 
 interface PropertyHeaderProps {
   property: Property;

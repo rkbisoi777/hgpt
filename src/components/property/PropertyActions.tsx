@@ -1,7 +1,7 @@
 import React from 'react';
 import { Heart, Scale } from 'lucide-react';
-import { Property } from '../types';
-import { usePropertyStore } from '../store/propertyStore';
+import { Property } from '../../types';
+import { usePropertyStore } from '../../store/propertyStore';
 import { toast } from 'react-hot-toast';
 
 interface PropertyActionsProps {

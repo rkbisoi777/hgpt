@@ -1,6 +1,6 @@
 import React from 'react';
 import { usePropertyStore } from '../store/propertyStore';
-import { PropertyCard } from '../components/PropertyCard';
+import { PropertyCard } from '../components/property/PropertyCard';
 import { Heart } from 'lucide-react';
 
 export function Wishlist() {

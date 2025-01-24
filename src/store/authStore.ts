@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { AuthState, ProfileUpdate } from '../types/auth';
+import toast from 'react-hot-toast';
 
 export const useAuthStore = create<AuthState & {
   login: (email: string, password: string, role?: 'user' | 'developer' | 'admin') => Promise<void>;
@@ -80,6 +81,7 @@ export const useAuthStore = create<AuthState & {
         });
       }
     } catch (error) {
+      toast.error((error as Error).message)
       set({ error: (error as Error).message });
     } finally {
       set({ isLoading: false });

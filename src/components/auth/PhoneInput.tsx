@@ -27,7 +27,7 @@ export function PhoneInput({ value, onChange, disabled, required }: PhoneInputPr
         value={countryCode}
         onChange={handleCountryChange}
         disabled={disabled}
-        className="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 bg-white"
+        className="px-2 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 bg-white w-24"
       >
         {countryCodes.map(({ code, name }) => (
           <option key={code} value={code}>
@@ -40,7 +40,7 @@ export function PhoneInput({ value, onChange, disabled, required }: PhoneInputPr
         value={localNumber}
         onChange={handleNumberChange}
         placeholder="Phone number"
-        className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+        className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 w-44"
         disabled={disabled}
         required={required}
       />

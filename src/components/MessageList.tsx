@@ -137,7 +137,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Message } from '../types';
-import { PropertyGrid } from './PropertyGrid';
+import { PropertyGrid } from './property/PropertyGrid';
 import { SuggestedQuestions } from './SuggestedQuestions';
 import { generateSuggestions } from '../utils/questionSuggestions';
 import { PreferenceForm } from './PreferenceForm';

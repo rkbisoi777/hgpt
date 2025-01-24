@@ -240,10 +240,10 @@ export function DeveloperRegistration() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold mb-6">Register as Developer</h1>
+      <div className="">
+        <h1 className="text-2xl text-center text-blue-500 font-bold mb-6">Register as Developer</h1>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md border border-blue-500">
           {/* Email Field */}
           <div>
             <label className="block text-sm font-medium mb-1">Email *</label>

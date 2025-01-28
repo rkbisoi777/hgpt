@@ -568,14 +568,14 @@ export function RegisterPage() {
 
       const payload = {
         sender_id: 'FSTSMS',
-        message: `Your OTP code is ${otp}`,
+        message: `Your HouseGPT OTP code is ${otp}`,
         language: 'english',
         route: 'otp',
         numbers: phone.replace(/\s+/g, ''), // Remove extra spaces
       };
 
       const headers = {
-        'authorization': import.meta.env.VITE_FAST2SMS_API_KEY, // Replace with your Fast2SMS API key
+        'authorization': "stFI4edA60jJTKqPUGcEM8fVoikXb3BnyupgvYOrSlzHwD9mCRlaF2n4sjq65SxVEJtBovDzC7k0wdZP", // Replace with your Fast2SMS API key
         'Content-Type': 'application/json',
       };
 

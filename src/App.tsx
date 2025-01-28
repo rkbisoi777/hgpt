@@ -17,7 +17,8 @@ import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { useEffect } from 'react';
 import { useAuthStore } from './store/authStore';
 import { LoginPage } from './components/auth/LoginPage';
-import { RegisterPage } from './components/auth/RegisterPage';
+// import { RegisterPage } from './components/auth/RegisterPage';
+import { RegisterPage } from './components/auth/RegisterWithOTP';
 
 function App() {
   const { initializeSession } = useAuthStore();

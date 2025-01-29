@@ -8,7 +8,7 @@
 // import { ChatServiceError } from '../lib/chat/errors';
 // import { useToken } from './TokenContext';
 
-// const DAILY_LIMIT = 5000;
+// const DAILY_LIMIT = 10000;
 
 // interface ChatInterfaceProps {
 //   initialQuery?: string;
@@ -162,7 +162,7 @@ import { toast } from 'react-hot-toast';
 import { ChatServiceError } from '../lib/chat/errors';
 import { useToken } from './TokenContext';
 
-const DAILY_LIMIT = 5000;
+const DAILY_LIMIT = 10000;
 
 interface ChatInterfaceProps {
   initialQuery?: string;

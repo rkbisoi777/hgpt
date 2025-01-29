@@ -28,8 +28,8 @@ export const TokenProvider = ({ children }: { children: ReactNode }) => {
     };
   
     // Default daily limit and check for user registration flag
-    const DEFAULT_DAILY_LIMIT = 10000;
-    const REGISTERED_DAILY_LIMIT = 20000;
+    const DEFAULT_DAILY_LIMIT = 5000;
+    const REGISTERED_DAILY_LIMIT = 10000;
     const isRegistered = getCookie('HouseGPTUserRegistered') === 'true';
     const DAILY_LIMIT = isRegistered ? REGISTERED_DAILY_LIMIT : DEFAULT_DAILY_LIMIT;
   
@@ -45,8 +45,8 @@ export const TokenProvider = ({ children }: { children: ReactNode }) => {
   
       // Check if user has already received the bonus
       const hasReceivedBonus = getCookie(BONUS_ADDED);
-      if (!hasReceivedBonus && (storedTokens ? Number(storedTokens) < DAILY_LIMIT + 10000 : DAILY_LIMIT < DAILY_LIMIT + 10000)) {
-        setTokens(DAILY_LIMIT + 10000); // Add bonus tokens
+      if (!hasReceivedBonus && (storedTokens ? Number(storedTokens) < DAILY_LIMIT + 5000 : DAILY_LIMIT < DAILY_LIMIT + 5000)) {
+        setTokens(DAILY_LIMIT + 5000); // Add bonus tokens
         setCookie(BONUS_ADDED, 'true', 1); // Set bonus added flag
       } else {
         // If bonus is already added or user has tokens, just set stored tokens

@@ -45,7 +45,7 @@ export const TokenProvider = ({ children }: { children: ReactNode }) => {
   
       // Check if user has already received the bonus
       const hasReceivedBonus = getCookie(BONUS_ADDED);
-      if (!hasReceivedBonus && (storedTokens ? Number(storedTokens) < DAILY_LIMIT + 10000 : DAILY_LIMIT < DAILY_LIMIT + 10000)) {
+      if (!hasReceivedBonus && (storedTokens ? Number(storedTokens) < DAILY_LIMIT + 5000 : DAILY_LIMIT < DAILY_LIMIT + 5000)) {
         setTokens(DAILY_LIMIT + 5000); // Add bonus tokens
         setCookie(BONUS_ADDED, 'true', 1); // Set bonus added flag
       } else {

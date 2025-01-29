@@ -37,7 +37,7 @@ export function Navbar() {
 
   // useEffect(() => {
   //   if (user && !hasUpdatedTokens) { 
-  //     const newTokenCount = tokens + 10000;
+  //     const newTokenCount = tokens + 5000;
   //     setTokens(newTokenCount);
   //     setHasUpdatedTokens(true);  
   //     // document.cookie = `HouseGPTTokens=${newTokenCount}; path=/; max-age=${60 * 60 * 24 * 365}`; 

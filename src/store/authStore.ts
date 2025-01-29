@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { AuthState, ProfileUpdate } from '../types/auth';
 import toast from 'react-hot-toast';
-import { Profile, ProfileService } from '../lib/profileUtils';
+import { Profile, ProfileService } from '../lib/profileService';
 
 export const useAuthStore = create<AuthState & {
   login: (email: string, password: string, role?: 'user' | 'developer' | 'admin') => Promise<void>;

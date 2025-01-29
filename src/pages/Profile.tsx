@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuthStore } from "../store/authStore";
-import { ProfileService } from "../lib/profileUtils";
+import { ProfileService } from "../lib/profileService";
 import { PhoneInput } from "../components/auth/PhoneInput";
 import { toast } from "react-hot-toast";
 
@@ -39,7 +39,6 @@ export function Profile() {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        // await fetchUser();
         if (user?.id) {
           const profileData = await ProfileService.getProfile(user.id);
           setProfile(profileData);

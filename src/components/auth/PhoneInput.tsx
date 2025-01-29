@@ -9,9 +9,11 @@ interface PhoneInputProps {
 }
 
 export function PhoneInput({ value, onChange, disabled, required }: PhoneInputProps) {
-  const [countryCode, localNumber] = value.startsWith('+') 
-    ? [value.split(' ')[0], value.split(' ')[1] || '']
-    : ['+91', value]; // Default to India (+91)
+
+  const [countryCode, localNumber] = value.startsWith('+')
+    ? [value.slice(0, 3), value.slice(3)] 
+    : ['+91', value]; 
+
 
   const handleCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     onChange(`${e.target.value} ${localNumber}`);

@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { AuthState, ProfileUpdate } from '../types/auth';
 import toast from 'react-hot-toast';
+import { Profile, ProfileService } from '../lib/profileUtils';
 
 export const useAuthStore = create<AuthState & {
   login: (email: string, password: string, role?: 'user' | 'developer' | 'admin') => Promise<void>;
@@ -9,6 +10,7 @@ export const useAuthStore = create<AuthState & {
   logout: () => Promise<void>;
   updateProfile: (update: ProfileUpdate) => Promise<void>;
   initializeSession: () => Promise<void>;
+  fetchUser: () => Promise<void>;
 }>((set) => ({
   user: null,
   isLoading: false,
@@ -114,6 +116,27 @@ export const useAuthStore = create<AuthState & {
             role,
           },
         });
+        const newProfile: Profile = {
+                id: data.user.id,
+                full_name: "NA",
+                email: email,
+                phone_number: phone,
+                buy_or_rent: "Buy",
+                property_type: "",
+                budget: 0,
+                city: "",
+                locality: "",
+                transport: "",
+                configuration: "",
+                readiness: "",
+                amenities: ["", ""],
+                gated: true,
+                environment: [""],
+                appreciation: 0,
+                decision_time: "",
+              };
+          
+         await ProfileService.createProfile(newProfile);
       }
     } catch (error) {
       set({ error: (error as Error).message });
@@ -159,6 +182,32 @@ export const useAuthStore = create<AuthState & {
         }));
       }
     } catch (error) {
+      set({ error: (error as Error).message });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  fetchUser: async () => {
+    try {
+      set({ isLoading: true, error: null });
+
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if (error) throw error;
+
+      if (user) {
+        set({
+          user: {
+            id: user.id,
+            email: user.email!,
+            phone: user.phone ?? '',
+            name: user.user_metadata?.name,
+            role: user.user_metadata?.role,
+          },
+        });
+      }
+    } catch (error) {
+      toast.error((error as Error).message);
       set({ error: (error as Error).message });
     } finally {
       set({ isLoading: false });

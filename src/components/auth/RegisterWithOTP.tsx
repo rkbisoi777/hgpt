@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuthStore } from '../../store/authStore';
 
+
 export function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,10 +14,11 @@ export function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [err, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { register, error} = useAuthStore();
+  const { register, error } = useAuthStore();
 
-  const generateOtp = () => Math.floor(1000 + Math.random() * 9000); // Generate 6-digit OTP
+  const generateOtp = () => Math.floor(1000 + Math.random() * 9000); // Generate 4-digit OTP
   const [generatedOtp, setGeneratedOtp] = useState<string | null>(null); // Store OTP temporarily
+  
 
   const sendOtp = async (phone: string) => {
     setIsLoading(true);
@@ -27,12 +29,12 @@ export function RegisterPage() {
 
       var phoneNumber = phone.replace(/\s+/g, '')
       if (phoneNumber.startsWith('+91')) {
-        phoneNumber = phoneNumber.slice(-10); 
+        phoneNumber = phoneNumber.slice(-10);
       }
 
       const auth = import.meta.env.VITE_FAST2SMS_API_KEY;
 
-      const response = await axios.get(                   
+      const response = await axios.get(
         `https://www.fast2sms.com/dev/bulkV2?authorization=${auth}&route=otp&variables_values=${otp}&flash=0&numbers=${phoneNumber}&schedule_time=`,
       );
 
@@ -55,17 +57,16 @@ export function RegisterPage() {
     setError(null);
     try {
       if (generatedOtp && inputOtp === generatedOtp) {
-        
-         await register(email, password, phone.replace(/\s+/g, ''));
+
+        await register(email, password, phone.replace(/\s+/g, ''));
         if (!error) {
           toast.success('OTP verified and account created successfully');
-              // document.cookie = `HouseGPTTokens=${tokens + 10000}; path=/; max-age=${60 * 60 * 24 * 365}`;
-              document.cookie = `HouseGPTUserRegistered=true; path=/; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
-              navigate('/')
-        
-            }
-        
-        
+          // document.cookie = `HouseGPTTokens=${tokens + 10000}; path=/; max-age=${60 * 60 * 24 * 365}`;
+          document.cookie = `HouseGPTUserRegistered=true; path=/; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
+          navigate('/')
+
+        }
+
       } else {
         throw new Error('Invalid OTP');
       }

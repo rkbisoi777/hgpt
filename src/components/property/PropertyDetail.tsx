@@ -10,8 +10,6 @@ import { PropertyDescriptionCard } from '../report/PropertyDescriptionCard';
 import { LocalityStats } from '../report/LocalityStats';
 import { useAuthStore } from '../../store/authStore';
 import { usePropertyStore } from '../../store/propertyStore';
-import { LoginModal } from '../auth/LoginModal';
-import { RegisterModal } from '../auth/RegisterModal';
 import { PropertyTabs } from './PropertyTabs';
 import PropertyGallery from './PropertyGallery';
 import OverviewCard from '../report/OverviewCardProps';
@@ -26,8 +24,6 @@ export function PropertyDetail() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
   const { getPropertyById } = usePropertyStore();
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [property, setProperty] = useState<Property | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('NearbyFacilities');
@@ -200,24 +196,6 @@ export function PropertyDetail() {
       </div>
 
       <PropertyChatButton property={property} />
-
-      <LoginModal
-        isOpen={showLoginModal}
-        onClose={() => setShowLoginModal(false)}
-        onRegister={() => {
-          setShowLoginModal(false);
-          setShowRegisterModal(true);
-        }}
-      />
-
-      <RegisterModal
-        isOpen={showRegisterModal}
-        onClose={() => setShowRegisterModal(false)}
-        onLogin={() => {
-          setShowRegisterModal(false);
-          setShowLoginModal(true);
-        }}
-      />
     </>
   );
 }

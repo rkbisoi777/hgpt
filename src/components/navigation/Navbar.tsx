@@ -4,8 +4,6 @@ import { Heart, Scale, User } from 'lucide-react';
 import { usePropertyStore } from '../../store/propertyStore';
 import { useAuthStore } from '../../store/authStore';
 import { NavbarIcon } from './NavbarIcon';
-// import { LoginModal } from '../auth/LoginModal';
-// import { RegisterModal } from '../auth/RegisterModal';
 import { ProfileSidebar } from '../profile/ProfileSidebar';
 import { useToken } from '../TokenContext';
 import { toast } from 'react-hot-toast';
@@ -22,8 +20,6 @@ const formatTokens = (tokens: number): string => {
 export function Navbar() {
   const { wishlist, compareList } = usePropertyStore();
   const { user } = useAuthStore();
-  // const [showLoginModal, setShowLoginModal] = useState(false);
-  // const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showProfileSidebar, setShowProfileSidebar] = useState(false);
   // const { tokens, setTokens } = useToken();
   const { tokens } = useToken();
@@ -82,24 +78,6 @@ export function Navbar() {
           </Link>
         )}
       </div>
-
-      {/* <LoginModal
-        isOpen={showLoginModal}
-        onClose={() => setShowLoginModal(false)}
-        onRegister={() => {
-          setShowLoginModal(false);
-          setShowRegisterModal(true);
-        }}
-      /> */}
-
-      {/* <RegisterModal
-        isOpen={showRegisterModal}
-        onClose={() => setShowRegisterModal(false)}
-        onLogin={() => {
-          setShowRegisterModal(false);
-          setShowLoginModal(true);
-        }}
-      /> */}
 
       <ProfileSidebar
         isOpen={showProfileSidebar}

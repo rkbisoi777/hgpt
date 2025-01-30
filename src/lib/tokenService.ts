@@ -19,7 +19,7 @@ export const TokenService = {
       return null;
     }
 
-    return data.available_tokens;
+    return data;
   },
 
   /**
@@ -81,10 +81,10 @@ export const TokenService = {
   /**
    * Resets user tokens by subtracting the given amount.
    */
-  async resetUserTokens(userId: string, tokenCount: number) {
+  async resetUserTokens(userId: string) {
     const { data: userTokens, error: fetchError } = await supabase
       .from("user_tokens")
-      .select("available_tokens")
+      .select("available_tokens, daily_limit")
       .eq("id", userId)
       .single();
 
@@ -93,11 +93,19 @@ export const TokenService = {
       return false;
     }
 
-    const newTokenCount = Math.max(0, userTokens.available_tokens - tokenCount);
+    if (!userTokens?.daily_limit) {
+      console.error("Daily limit not found for user:", userId);
+      return false;
+    }
+
+    const newTokenCount = Math.max(0, userTokens.daily_limit);
 
     const { error } = await supabase
       .from("user_tokens")
-      .update({ available_tokens: newTokenCount, last_updated: new Date() })
+      .update({ 
+        available_tokens: newTokenCount, 
+        last_updated: new Date().toISOString() // Ensures proper timestamp format
+      })
       .eq("id", userId);
 
     if (error) {
@@ -105,8 +113,14 @@ export const TokenService = {
       return false;
     }
 
-    window.dispatchEvent(new Event(TOKEN_REFRESH_EVENT));
+    // Ensure TOKEN_REFRESH_EVENT is defined
+    if (typeof TOKEN_REFRESH_EVENT !== "undefined") {
+      window.dispatchEvent(new Event(TOKEN_REFRESH_EVENT));
+    } else {
+      console.warn("TOKEN_REFRESH_EVENT is not defined.");
+    }
 
     return true;
-  }
+}
+
 };

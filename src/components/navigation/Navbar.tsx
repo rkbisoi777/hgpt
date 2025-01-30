@@ -39,7 +39,7 @@ export function Navbar() {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user.id) {
         const tkns = await TokenService.fetchUserTokens(session?.user.id);
-        setTkn(tkns);
+        setTkn(tkns.available_tokens);
       }
     };
 
@@ -54,6 +54,38 @@ export function Navbar() {
     };
 
   }, [user]);
+
+
+  useEffect(() => {
+    const fetchTokens = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user?.id) return;
+
+      const lastFetch = localStorage.getItem("last_token_fetch");
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      if (lastFetch && new Date(lastFetch) >= today) {
+        console.log("Tokens already fetched today.");
+        return; // Prevent multiple calls
+      }
+
+      let tkns = await TokenService.fetchUserTokens(session.user.id);
+      if (tkns?.last_updated) {
+        const lastUpdatedDate = new Date(tkns.last_updated);
+        
+        if (lastUpdatedDate < today) {
+          await TokenService.resetUserTokens(session.user.id);
+          tkns = await TokenService.fetchUserTokens(session.user.id); // Re-fetch updated tokens
+        }
+
+        setTkn(tkns);
+        localStorage.setItem("last_token_fetch", today.toISOString()); // Store today's date
+      }
+    };
+
+    fetchTokens();
+  }, []); 
 
   // useEffect(() => {
   //   if (user && !hasUpdatedTokens) { 

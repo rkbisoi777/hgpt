@@ -272,7 +272,7 @@ What would you like to know?`,
 
     if(session?.user){
       const tkns = await TokenService.fetchUserTokens(session?.user.id)
-      if(tkns <= 0){
+      if(tkns.available_tokens <= 0){
         toast.error('You have run out of tokens. Please wait for your daily limit to reset or upgrade your plan.');
         return;
       }

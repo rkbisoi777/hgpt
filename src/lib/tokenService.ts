@@ -1,5 +1,7 @@
 import { supabase } from "./supabaseClient";
 
+const TOKEN_REFRESH_EVENT = "refreshTokens";
+
 // Token Service
 export const TokenService = {
   /**
@@ -17,7 +19,7 @@ export const TokenService = {
       return null;
     }
 
-    return data;
+    return data.available_tokens;
   },
 
   /**
@@ -38,6 +40,8 @@ export const TokenService = {
       console.error("Error adding tokens:", error.message);
       return false;
     }
+
+    window.dispatchEvent(new Event(TOKEN_REFRESH_EVENT));
 
     return true;
   },
@@ -69,6 +73,8 @@ export const TokenService = {
       return false;
     }
 
+    window.dispatchEvent(new Event(TOKEN_REFRESH_EVENT));
+
     return true;
   },
 
@@ -98,6 +104,8 @@ export const TokenService = {
       console.error("Error resetting tokens:", error.message);
       return false;
     }
+
+    window.dispatchEvent(new Event(TOKEN_REFRESH_EVENT));
 
     return true;
   }

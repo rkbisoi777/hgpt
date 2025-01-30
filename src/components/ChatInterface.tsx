@@ -161,6 +161,8 @@ import { generateMessageId } from '../utils/messageUtils';
 import { toast } from 'react-hot-toast';
 import { ChatServiceError } from '../lib/chat/errors';
 import { useToken } from './TokenContext';
+import { TokenService } from '../lib/tokenService';
+import { supabase } from '../lib/supabase';
 
 const DAILY_LIMIT = 5000;
 
@@ -220,14 +222,23 @@ export function ChatInterface({ initialQuery }: ChatInterfaceProps) {
     initChatService();
   }, []);
 
-  const subtractTokens = (amount: number): void => {
-    if (tokens - amount >= 0) {
-      const newTokenCount = tokens - amount;
-      setTokens(newTokenCount);
-      setCookie('HouseGPTTokens', String(newTokenCount), 1);
-    } else {
-      toast('Not enough tokens available.');
-    }
+  const subtractTokens = async(tokenUsed: number) => {
+    const { data: { session } } = await supabase.auth.getSession();
+          if (session?.user.id) {
+            await TokenService.updateUserTokens(session.user.id, tokenUsed)
+          }else{
+           
+                  const newTokenCount = tokens - tokenUsed;
+                  if(newTokenCount < 0){
+                    setTokens(0);
+                    setCookie('HouseGPTTokens', String(0), 1);
+                  }else{
+                    setTokens(newTokenCount);
+                    setCookie('HouseGPTTokens', String(newTokenCount), 1);
+                  }
+                  
+                
+          }
   };
 
   useEffect(() => {
@@ -257,6 +268,21 @@ What would you like to know?`,
       toast.error('Chat service not available');
       return;
     }
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if(session?.user){
+      const tkns = await TokenService.fetchUserTokens(session?.user.id)
+      if(tkns <= 0){
+        toast.error('You have run out of tokens. Please wait for your daily limit to reset or upgrade your plan.');
+        return;
+      }
+    }else{
+      if (tokens <= 0) {
+        toast.error('You have run out of tokens. Please wait for your daily limit to reset or upgrade your plan.');
+        return;
+      }
+    }
+      
 
     setIsLoading(true);
     const userMessage: Message = {

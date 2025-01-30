@@ -23,7 +23,7 @@ export function Home() {
     try {
       const props: Property[]= await propertyService.searchProperties("Mumbai");
       setProperties(props);
-      console.log(props)
+      // console.log(props)
     } catch (error) {
       console.error("Error fetching properties:", error);
     }

@@ -7,6 +7,8 @@ import { NavbarIcon } from './NavbarIcon';
 import { ProfileSidebar } from '../profile/ProfileSidebar';
 import { useToken } from '../TokenContext';
 import { toast } from 'react-hot-toast';
+import { TokenService } from '../../lib/tokenService';
+import { supabase } from '../../lib/supabase';
 
 const formatTokens = (tokens: number): string => {
   if (tokens >= 1000) {
@@ -16,20 +18,42 @@ const formatTokens = (tokens: number): string => {
   return tokens.toString();  // Return the number as is if it's less than 1000
 };
 
+const TOKEN_REFRESH_EVENT = "refreshTokens";
 
 export function Navbar() {
   const { wishlist, compareList } = usePropertyStore();
   const { user } = useAuthStore();
   const [showProfileSidebar, setShowProfileSidebar] = useState(false);
-  // const { tokens, setTokens } = useToken();
+  const [tkn, setTkn ] = useState<number>(0);
   const { tokens } = useToken();
   // const [hasUpdatedTokens, setHasUpdatedTokens] = useState(false);
 
   useEffect(() => {
     if (tokens <= 2000 && !user) {
-      toast('Sign up now to get 10,000 more tokens!');
+      toast('Sign up now to get 5,000 more tokens!');
     }
   }, [tokens, user]);
+
+  useEffect(() => {
+    const fetchTokens = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user.id) {
+        const tkns = await TokenService.fetchUserTokens(session?.user.id);
+        setTkn(tkns);
+      }
+    };
+
+    fetchTokens();
+
+    // Listen for the refresh event
+    const handleTokenRefresh = () => fetchTokens();
+    window.addEventListener(TOKEN_REFRESH_EVENT, handleTokenRefresh);
+
+    return () => {
+      window.removeEventListener(TOKEN_REFRESH_EVENT, handleTokenRefresh);
+    };
+
+  }, [user]);
 
   // useEffect(() => {
   //   if (user && !hasUpdatedTokens) { 
@@ -46,7 +70,7 @@ export function Navbar() {
       <div className="flex items-center gap-3">
           <p className="font-semibold text-blue-500 text-sm mt-[1px]">
             <i className="fas fa-coins mr-1.5"></i>
-            {formatTokens(tokens)}
+            {!user ? formatTokens(tokens) : formatTokens(tkn)}
         </p>
         
         
@@ -71,7 +95,6 @@ export function Navbar() {
           </>
         ) : (
           <Link to="/login">
-          {/* <button className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-sm px-3 py-1.5 rounded-lg" onClick={() => setShowLoginModal(true)}> */}
           <button className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-sm px-3 py-1.5 rounded-lg" >
             Login
           </button>

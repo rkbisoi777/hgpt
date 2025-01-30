@@ -3,7 +3,6 @@ import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuthStore } from '../../store/authStore';
-import { useToken } from '../TokenContext';
 
 
 export function RegisterPage() {
@@ -16,7 +15,6 @@ export function RegisterPage() {
   const [err, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { register, error } = useAuthStore();
-  const {tokens} = useToken()
 
   const generateOtp = () => Math.floor(1000 + Math.random() * 9000); // Generate 4-digit OTP
   const [generatedOtp, setGeneratedOtp] = useState<string | null>(null); // Store OTP temporarily
@@ -63,7 +61,7 @@ export function RegisterPage() {
         await register(email, password, phone.replace(/\s+/g, ''));
         if (!error) {
           toast.success('OTP verified and account created successfully');
-          document.cookie = `HouseGPTTokens=${tokens + 10000}; path=/; max-age=${60 * 60 * 24 * 365}`;
+          // document.cookie = `HouseGPTTokens=${tokens + 10000}; path=/; max-age=${60 * 60 * 24 * 365}`;
           document.cookie = `HouseGPTUserRegistered=true; path=/; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
           navigate('/')
 

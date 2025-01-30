@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { AuthState, ProfileUpdate } from '../types/auth';
 import toast from 'react-hot-toast';
 import { Profile, ProfileService } from '../lib/profileService';
+import { TokenService } from '../lib/tokenService';
 
 export const useAuthStore = create<AuthState & {
   login: (email: string, password: string, role?: 'user' | 'developer' | 'admin') => Promise<void>;
@@ -137,6 +138,7 @@ export const useAuthStore = create<AuthState & {
               };
           
          await ProfileService.createProfile(newProfile);
+         await TokenService.addUserTokens(data.user.id,"free")
       }
     } catch (error) {
       set({ error: (error as Error).message });

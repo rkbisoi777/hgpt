@@ -1,4 +1,3 @@
-import React from 'react';
 import { Bed, Bath, Square, MapPin, Heart, Scale } from 'lucide-react';
 import { Property } from '../../types';
 import { Link } from 'react-router-dom';

@@ -5,13 +5,14 @@ import { usePropertyStore } from '../../store/propertyStore';
 import toast from 'react-hot-toast';
 import ProgressBar from '../ProgressBar';
 import { convertToCroreAndLakh, extractIndianCity } from '../../lib/utils';
+import { useEffect, useState } from 'react';
 
 interface PropertyCardProps {
-  property: Property;
+  propertyId: string;
   compact?: boolean;
 }
 
-export function PropertyCard({ property, compact = false }: PropertyCardProps) {
+export function PropertyCard({ propertyId }: PropertyCardProps) {
   const { 
     addToWishlist, 
     removeFromWishlist, 
@@ -21,30 +22,63 @@ export function PropertyCard({ property, compact = false }: PropertyCardProps) {
     isInCompareList
   } = usePropertyStore();
 
-  const handleWishlistClick = () => {
-    if (isInWishlist(property.id)) {
-      removeFromWishlist(property.id);
-      toast.success('Removed from wishlist');
-    } else {
-      addToWishlist(property);
-      toast.success('Added to wishlist');
-    }
-  };
+    const [property, setProperty] = useState<Property | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+    const { getPropertyById } = usePropertyStore();
 
-  const handleCompareClick = () => {
-    if (isInCompareList(property.id)) {
-      removeFromCompare(property.id);
-      toast.success('Removed from compare list');
-    } else {
-      const added = addToCompare(property);
-      if (added) {
-        toast.success('Added to compare list');
+    useEffect(() => {
+      const fetchProperty = async () => {
+        try {
+          const prop = await getPropertyById(propertyId);
+          setProperty(prop);
+        } catch (err) {
+          setError('Failed to load property');
+          console.error(err);
+        } finally {
+          setLoading(false);
+        }
+      };
+    
+      fetchProperty();
+    }, [propertyId]);
+
+    if (loading) {
+      return <div>Loading...</div>;
+    }
+    
+    if (error) {
+      return <div>{error}</div>;
+    }
+
+  const handleWishlistClick = () => {
+    if (property) {
+      if (isInWishlist(property.id)) {
+        removeFromWishlist(property.id);
+        toast.success('Removed from wishlist');
       } else {
-        toast.error('Compare list is full (max 5 properties)');
+        addToWishlist(property);
+        toast.success('Added to wishlist');
       }
     }
   };
-  return (
+
+  const handleCompareClick = async() => {
+    if (property) {
+      if (isInCompareList(property.id)) {
+        removeFromCompare(property.id);
+        toast.success('Removed from compare list');
+      } else {
+        const added = await addToCompare(property);
+        if (added) {
+          toast.success('Added to compare list');
+        } else {
+          toast.error('Compare list is full (max 5 properties)');
+        }
+      }
+    }
+  };
+  return property ? (
     <Link to={`/property/${property.id}`} className="block">
       
       <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 relative w-full h-80"> {/* Set fixed height */}
@@ -154,5 +188,5 @@ export function PropertyCard({ property, compact = false }: PropertyCardProps) {
         </div>
       </div>
     </Link>
-  );
+  ): null;
 }

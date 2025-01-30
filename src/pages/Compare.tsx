@@ -1,10 +1,69 @@
-import React from 'react';
-import { usePropertyStore } from '../store/propertyStore';
+import React, { useEffect, useState } from 'react';
 import { Scale } from 'lucide-react';
 import { CompareTable } from '../components/compare/CompareTable';
+import { CompareService } from '../lib/CompareService';
+import { supabase } from '../lib/supabase';
+import toast from 'react-hot-toast';
 
 export function Compare() {
-  const { compareList, removeFromCompare } = usePropertyStore();
+  // const { compareList, removeFromCompare } = usePropertyStore();
+    const [compareList, setWishlist] = useState<string[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchWishlist = async () => {
+          try {
+            const { data: { session } } = await supabase.auth.getSession();
+    
+            if (!session?.user) {
+              setError('User not logged in');
+              setLoading(false);
+              return;
+            }
+    
+            const userId = session.user.id;
+            const fetchedWishlist = await CompareService.getCompare(userId);
+    
+            // Make sure fetchedWishlist is an array
+            setWishlist(Array.isArray(fetchedWishlist) ? fetchedWishlist : []);
+          } catch (err) {
+            console.error(err);
+            setError('Failed to load wishlist');
+          } finally {
+            setLoading(false);
+          }
+        };
+    
+        fetchWishlist();
+      }, []);
+
+      const handleRemove = async (propertyId: string) => {
+        const { data: { session } } = await supabase.auth.getSession();
+        const userId = session?.user.id;
+        if (userId) {
+          try {
+            await CompareService.removeItemsFromCompare(userId, [propertyId]);
+            const newWishlist = await CompareService.getCompare(userId);
+            setWishlist(newWishlist);
+            toast.success("Property successfully removed from Compare List")
+          } catch (err) {
+            setError('Failed to remove item from compare list');
+          }
+        }
+      };
+    
+      if (loading) {
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="max-w-7xl mx-auto px-4 py-8">
+              <div className="text-center py-12">
+                <p className="text-gray-500">Loading...</p>
+              </div>
+            </div>
+          </div>
+        );
+      }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -19,10 +78,11 @@ export function Compare() {
             <p className="text-gray-500">No properties to compare</p>
           </div>
         ) : (
-          <CompareTable 
-            properties={compareList} 
-            onRemove={removeFromCompare} 
-          />
+          // <CompareTable 
+          //   properties={compareList} 
+          //   onRemove={removeFromCompare} 
+          // />
+          compareList.toString()
         )}
       </div>
     </div>

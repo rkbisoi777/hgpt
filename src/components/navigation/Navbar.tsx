@@ -21,7 +21,7 @@ const formatTokens = (tokens: number): string => {
 const TOKEN_REFRESH_EVENT = "refreshTokens";
 
 export function Navbar() {
-  const { wishlist, compareList } = usePropertyStore();
+  // const { wishlist, compareList } = usePropertyStore();
   const { user } = useAuthStore();
   const [showProfileSidebar, setShowProfileSidebar] = useState(false);
   const [tkn, setTkn ] = useState<number>(0);
@@ -66,7 +66,7 @@ export function Navbar() {
       today.setHours(0, 0, 0, 0);
       
       if (lastFetch && new Date(lastFetch) >= today) {
-        console.log("Tokens already fetched today.");
+        // console.log("Tokens already fetched today.");
         return; // Prevent multiple calls
       }
 
@@ -111,14 +111,14 @@ export function Navbar() {
              {user?.role == 'user' && (<Link to="/wishlist">
               <NavbarIcon 
                 icon={Heart} 
-                count={wishlist.length} 
+                // count={wishlist.length} 
               />
             </Link>)}
             {user?.role == 'user' && (<Link to="/compare">
               <NavbarIcon 
                 icon={Scale} 
                 
-                count={compareList.length} 
+                // count={compareList.length} 
               />
             </Link>)}
             <button onClick={() => setShowProfileSidebar(true)}>

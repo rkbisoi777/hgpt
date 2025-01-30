@@ -22,29 +22,38 @@ export function SmallPropertyCard({ property }: SmallPropertyCardProps) {
       isInWishlist,
       isInCompareList
     } = usePropertyStore();
+    
 
     const handleWishlistClick = () => {
-      if (isInWishlist(property.id)) {
-        removeFromWishlist(property.id);
-        toast.success('Removed from wishlist');
-      } else {
-        addToWishlist(property);
-        toast.success('Added to wishlist');
-      }
+      // if (isInWishlist(property.id)) {
+      //   removeFromWishlist(property.id);
+      //   toast.success('Removed from wishlist');
+      // } else {
+      //   addToWishlist(property);
+      //   toast.success('Added to wishlist');
+      // }
+      addToWishlist(property);
+      toast.success('Added to wishlist');
     };
   
-    const handleCompareClick = () => {
-      if (isInCompareList(property.id)) {
-        removeFromCompare(property.id);
-        toast.success('Removed from compare list');
-      } else {
-        const added = addToCompare(property);
+    const handleCompareClick = async() => {
+      // if (isInCompareList(property.id)) {
+      //   removeFromCompare(property.id);
+      //   toast.success('Removed from compare list');
+      // } else {
+      //   const added = await addToCompare(property);
+      //   if (added) {
+      //     toast.success('Added to compare list');
+      //   } else {
+      //     toast.error('Compare list is full (max 5 properties)');
+      //   }
+      // }
+      const added = await addToCompare(property);
         if (added) {
           toast.success('Added to compare list');
         } else {
           toast.error('Compare list is full (max 5 properties)');
         }
-      }
     };
 
   return (

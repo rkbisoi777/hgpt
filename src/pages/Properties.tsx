@@ -68,7 +68,7 @@ export function Properties({ fromHome = false, preloadedProperties }: Properties
         {filteredProperties &&
           filteredProperties.length > 0 &&
           filteredProperties.map((property) => (
-            <PropertyCard key={property.id} property={property} />
+            <PropertyCard key={property.id} propertyId={property.id} />
           ))}
         {filteredProperties && filteredProperties.length === 0 && (
           <p>No properties found with the selected filters.</p>

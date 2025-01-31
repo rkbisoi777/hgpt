@@ -3,7 +3,7 @@ import { supabase } from './supabaseClient';
 export class CompareService {
     // Get compare data by user_id
     static async getCompare(userId: string) {
-        const { data, error } = await supabase
+        const { data } = await supabase
             .from('compare')
             .select('item_ids')
             .eq('user_id', userId)
@@ -84,5 +84,19 @@ export class CompareService {
         }
 
         return data;
+    }
+
+    static async doesItemExist(userId: string, itemId: string): Promise<boolean> {
+        const { data, error } = await supabase
+            .from('compare')
+            .select('item_ids')
+            .eq('user_id', userId)
+            .single();
+    
+        if (error && error.code !== 'PGRST116') {
+            throw new Error(`Error fetching compare list: ${error.message}`);
+        }
+    
+        return data?.item_ids?.includes(itemId) || false;
     }
 }

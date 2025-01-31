@@ -26,6 +26,16 @@ export function PropertyCard({ propertyId }: PropertyCardProps) {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const { getPropertyById } = usePropertyStore();
+    const [inWishlist, setInWishlist] = useState<boolean>(false);
+    const [inCompareList, setInCompareList] = useState<boolean>(false);
+
+    useEffect(() => {
+        const checkStatus = async () => {
+          setInWishlist(await isInWishlist(propertyId));
+          setInCompareList(await isInCompareList(propertyId));
+        };
+        checkStatus();
+      }, [propertyId, isInWishlist, isInCompareList]);
 
     useEffect(() => {
       const fetchProperty = async () => {
@@ -51,24 +61,25 @@ export function PropertyCard({ propertyId }: PropertyCardProps) {
       return <div>{error}</div>;
     }
 
-  const handleWishlistClick = () => {
-    if (property) {
-      if (isInWishlist(property.id)) {
-        removeFromWishlist(property.id);
+    const handleWishlistClick = async () => {
+      if (inWishlist) {
+        await removeFromWishlist(propertyId);
         toast.success('Removed from wishlist');
       } else {
-        addToWishlist(property);
-        toast.success('Added to wishlist');
+        if(property){
+          await addToWishlist(property);
+          toast.success('Added to wishlist');
+        }
       }
-    }
-  };
+      setInWishlist(await isInWishlist(propertyId));
+    };
 
-  const handleCompareClick = async() => {
-    if (property) {
-      if (isInCompareList(property.id)) {
-        removeFromCompare(property.id);
-        toast.success('Removed from compare list');
-      } else {
+  const handleCompareClick = async () => {
+    if (inCompareList) {
+      await removeFromCompare(propertyId);
+      toast.success('Removed from compare list');
+    } else {
+      if(property){
         const added = await addToCompare(property);
         if (added) {
           toast.success('Added to compare list');
@@ -77,7 +88,9 @@ export function PropertyCard({ propertyId }: PropertyCardProps) {
         }
       }
     }
+    setInCompareList(await isInCompareList(propertyId));
   };
+
   return property ? (
     <Link to={`/property/${property.id}`} className="block">
       
@@ -112,7 +125,7 @@ export function PropertyCard({ propertyId }: PropertyCardProps) {
                 className="p-1 rounded-full bg-black bg-opacity-20 hover:bg-red-200 hover:bg-opacity-30 shadow-lg border border-white rounded full"
                 aria-label="Like property"
               >
-                <Heart className="w-4 h-4 text-white" />
+                <Heart className="w-4 h-4 text-white" fill={inWishlist ? 'currentColor' : 'none'}/>
               </button>
               <button
                 onClick={(event) => {

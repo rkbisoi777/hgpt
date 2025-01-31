@@ -1,10 +1,11 @@
-import { Bed, Bath, Square, MapPin, MoreHorizontal, Heart, Scale } from 'lucide-react';
+import { Bed, Bath, Square, MapPin, Heart, Scale } from 'lucide-react';
 import { Property } from '../../types';
 import ProgressBar from '../ProgressBar'
 import { Link } from 'react-router-dom';
 import { usePropertyStore } from '../../store/propertyStore';
 import { toast } from 'react-hot-toast';
 import { convertToCroreAndLakh, extractIndianCity } from '../../lib/utils';
+import { useEffect, useState } from 'react';
 
 
 
@@ -22,39 +23,45 @@ export function SmallPropertyCard({ property }: SmallPropertyCardProps) {
       isInWishlist,
       isInCompareList
     } = usePropertyStore();
+
+    const [inWishlist, setInWishlist] = useState<boolean>(false);
+    const [inCompareList, setInCompareList] = useState<boolean>(false);
+
+    useEffect(() => {
+        const checkStatus = async () => {
+          setInWishlist(await isInWishlist(property.id));
+          setInCompareList(await isInCompareList(property.id));
+        };
+        checkStatus();
+        
+      }, [property.id, isInWishlist, isInCompareList]);
     
 
-    const handleWishlistClick = () => {
-      // if (isInWishlist(property.id)) {
-      //   removeFromWishlist(property.id);
-      //   toast.success('Removed from wishlist');
-      // } else {
-      //   addToWishlist(property);
-      //   toast.success('Added to wishlist');
-      // }
-      addToWishlist(property);
-      toast.success('Added to wishlist');
-    };
-  
-    const handleCompareClick = async() => {
-      // if (isInCompareList(property.id)) {
-      //   removeFromCompare(property.id);
-      //   toast.success('Removed from compare list');
-      // } else {
-      //   const added = await addToCompare(property);
-      //   if (added) {
-      //     toast.success('Added to compare list');
-      //   } else {
-      //     toast.error('Compare list is full (max 5 properties)');
-      //   }
-      // }
-      const added = await addToCompare(property);
-        if (added) {
-          toast.success('Added to compare list');
+      const handleWishlistClick = async () => {
+        if (inWishlist) {
+          await removeFromWishlist(property.id);
+          toast.success('Removed from wishlist');
         } else {
-          toast.error('Compare list is full (max 5 properties)');
+          await addToWishlist(property);
+          toast.success('Added to wishlist');
         }
-    };
+        setInWishlist(await isInWishlist(property.id));
+      };
+  
+      const handleCompareClick = async () => {
+        if (inCompareList) {
+          await removeFromCompare(property.id);
+          toast.success('Removed from compare list');
+        } else {
+          const added = await addToCompare(property);
+          if (added) {
+            toast.success('Added to compare list');
+          } else {
+            toast.error('Compare list is full (max 5 properties)');
+          }
+        }
+        setInCompareList(await isInCompareList(property.id));
+      };
 
   return (
     <Link to={`/property/${property.id}`} className="block relative">
@@ -89,7 +96,7 @@ export function SmallPropertyCard({ property }: SmallPropertyCardProps) {
                 className="p-1 rounded-full bg-black bg-opacity-20 hover:bg-red-200 hover:bg-opacity-30 shadow-lg border border-white rounded full"
                 aria-label="Like property"
               >
-                <Heart className="w-4 h-4 text-white" />
+                <Heart className="w-4 h-4 text-white" fill={inWishlist ? 'currentColor' : 'none'}/>
               </button>
               <button
                 onClick={(event) => {

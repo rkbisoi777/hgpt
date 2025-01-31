@@ -3,7 +3,7 @@ import { supabase } from './supabaseClient';
 export class WishlistService {
     // Get wishlist by user_id
     static async getWishlist(userId: string) {
-        const { data, error } = await supabase
+        const { data } = await supabase
             .from('wishlist')
             .select('item_ids')
             .eq('user_id', userId)
@@ -79,6 +79,20 @@ export class WishlistService {
         }
 
         return data;
+    }
+
+    static async doesItemExist(userId: string, itemId: string): Promise<boolean> {
+        const { data, error } = await supabase
+            .from('compare')
+            .select('item_ids')
+            .eq('user_id', userId)
+            .single();
+    
+        if (error && error.code !== 'PGRST116') {
+            throw new Error(`Error fetching compare list: ${error.message}`);
+        }
+    
+        return data?.item_ids?.includes(itemId) || false;
     }
 
 }

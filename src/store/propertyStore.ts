@@ -127,8 +127,8 @@ interface PropertyStore {
   removeFromWishlist: (propertyId: string) => void;
   addToCompare: (property: Property) => Promise<boolean>;
   removeFromCompare: (propertyId: string) => void;
-  isInWishlist: (propertyId: string) => boolean;
-  isInCompareList: (propertyId: string) => boolean;
+  isInWishlist: (propertyId: string) => Promise<boolean>;
+  isInCompareList: (propertyId: string) => Promise<boolean>;
 }
 
 export const usePropertyStore = create<PropertyStore>((set, get) => ({
@@ -212,13 +212,14 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
 
   // Add to compare
   addToCompare: async (property: Property): Promise<boolean> => {
-    const { compareList } = get();
-    if (compareList.length >= 5) return false; // Limit to 5 properties
-    
     const { data: { session } } = await supabase.auth.getSession();
     const userId = session?.user.id
+    
     if(userId){
       try {
+        const compareList = await CompareService.getCompare(userId);
+        // const compareCount = Array.isArray(compareList.length)
+        if (compareList.length >= 5) return false; // Limit to 5 properties
         const updatedCompareList = await CompareService.addItemsToCompare(userId, [property.id]);
         set({ compareList: updatedCompareList });
         return true;
@@ -247,12 +248,34 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
   },
 
   // Check if property is in wishlist
-  isInWishlist: (propertyId) => {
-    return get().wishlist.some(p => p.id === propertyId);
+  isInWishlist: async(propertyId) => {
+    const { data: { session } } = await supabase.auth.getSession();
+    const userId = session?.user.id
+    if(userId){
+      try {
+        const isExist = await WishlistService.doesItemExist(userId, propertyId);
+        if(isExist) return true;
+        
+      }catch (error) {
+        set({ error: 'Failed to remove property from compare list' });
+      }
+    }
+    return false
   },
 
   // Check if property is in compare list
-  isInCompareList: (propertyId) => {
-    return get().compareList.some(p => p.id === propertyId);
+  isInCompareList: async(propertyId) => {
+    const { data: { session } } = await supabase.auth.getSession();
+    const userId = session?.user.id
+    if(userId){
+      try {
+        const isExist = await CompareService.doesItemExist(userId, propertyId);
+        if(isExist) return true;
+        
+      }catch (error) {
+        set({ error: 'Failed to remove property from compare list' });
+      }
+    }
+    return false
   }
 }));

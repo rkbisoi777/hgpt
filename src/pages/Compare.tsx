@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Scale } from 'lucide-react';
 import { CompareTable } from '../components/compare/CompareTable';
 import { CompareService } from '../lib/CompareService';
@@ -78,11 +78,11 @@ export function Compare() {
             <p className="text-gray-500">No properties to compare</p>
           </div>
         ) : (
-          // <CompareTable 
-          //   properties={compareList} 
-          //   onRemove={removeFromCompare} 
-          // />
-          compareList.toString()
+          <CompareTable 
+            propertyIds={compareList} 
+            onRemove={handleRemove} 
+          />
+          // compareList.toString()
         )}
       </div>
     </div>

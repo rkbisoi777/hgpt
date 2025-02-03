@@ -50,6 +50,7 @@ export function Wishlist() {
         setError('Failed to remove item from wishlist');
       }
     }
+    window.dispatchEvent(new Event('wishlistUpdated')); 
   };
 
   if (loading) {

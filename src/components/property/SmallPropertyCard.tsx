@@ -1,67 +1,98 @@
 import { Bed, Bath, Square, MapPin, Heart, Scale } from 'lucide-react';
 import { Property } from '../../types';
-import ProgressBar from '../ProgressBar'
 import { Link } from 'react-router-dom';
 import { usePropertyStore } from '../../store/propertyStore';
-import { toast } from 'react-hot-toast';
+import toast from 'react-hot-toast';
+import ProgressBar from '../ProgressBar';
 import { convertToCroreAndLakh, extractIndianCity } from '../../lib/utils';
 import { useEffect, useState } from 'react';
-
-
-
+// import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 interface SmallPropertyCardProps {
-  property: Property;
+  propertyId: string;
 }
 
-export function SmallPropertyCard({ property }: SmallPropertyCardProps) {
+const SkeletonCard = () => (
+  <div className="animate-pulse w-44 h-60 bg-gray-200 rounded-lg shadow-md border border-gray-200"></div>
+);
+
+export function SmallPropertyCard({ propertyId }: SmallPropertyCardProps) {
   const { 
-      addToWishlist, 
-      removeFromWishlist, 
-      addToCompare, 
-      removeFromCompare,
-      isInWishlist,
-      isInCompareList
-    } = usePropertyStore();
+    addToWishlist, 
+    removeFromWishlist, 
+    addToCompare, 
+    removeFromCompare,
+    isInWishlist,
+    isInCompareList,
+    getPropertyById
+  } = usePropertyStore();
 
-    const [inWishlist, setInWishlist] = useState<boolean>(false);
-    const [inCompareList, setInCompareList] = useState<boolean>(false);
+  const [property, setProperty] = useState<Property | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [inWishlist, setInWishlist] = useState<boolean>(false);
+  const [inCompareList, setInCompareList] = useState<boolean>(false);
 
-    useEffect(() => {
-        const checkStatus = async () => {
-          setInWishlist(await isInWishlist(property.id));
-          setInCompareList(await isInCompareList(property.id));
-        };
-        checkStatus();
-        
-      }, [property.id, isInWishlist, isInCompareList]);
-    
+  useEffect(() => {
+    const fetchProperty = async () => {
+      try {
+        const prop = await getPropertyById(propertyId);
+        setProperty(prop);
+      } catch (err) {
+        setError('Failed to load property');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProperty();
+  }, [propertyId]);
 
-      const handleWishlistClick = async () => {
-        if (inWishlist) {
-          await removeFromWishlist(property.id);
-          toast.success('Removed from wishlist');
-        } else {
-          await addToWishlist(property);
-          toast.success('Added to wishlist');
-        }
-        setInWishlist(await isInWishlist(property.id));
-      };
-  
-      const handleCompareClick = async () => {
-        if (inCompareList) {
-          await removeFromCompare(property.id);
-          toast.success('Removed from compare list');
-        } else {
-          const added = await addToCompare(property);
-          if (added) {
-            toast.success('Added to compare list');
-          } else {
-            toast.error('Compare list is full (max 5 properties)');
-          }
-        }
-        setInCompareList(await isInCompareList(property.id));
-      };
+  useEffect(() => {
+    const checkStatus = async () => {
+      setInWishlist(await isInWishlist(propertyId));
+      setInCompareList(await isInCompareList(propertyId));
+    };
+    checkStatus();
+  }, [propertyId]);
+
+  const handleWishlistClick = async () => {
+    setInWishlist((prev) => !prev);
+    if (inWishlist) {
+      await removeFromWishlist(propertyId);
+      toast.success('Removed from wishlist');
+    } else if (property) {
+      await addToWishlist(property);
+      toast.success('Added to wishlist');
+    }
+
+    window.dispatchEvent(new Event('wishlistUpdated')); 
+  };
+
+  const handleCompareClick = async () => {
+    setInCompareList((prev) => !prev);
+    if (inCompareList) {
+      await removeFromCompare(propertyId);
+      toast.success('Removed from compare list');
+    } else if (property) {
+      const added = await addToCompare(property);
+      if (added) {
+        toast.success('Added to compare list');
+      } else {
+        toast.error('Compare list is full (max 5 properties)');
+        setInCompareList(false); // Revert state if it fails
+      }
+    }
+
+    window.dispatchEvent(new Event('compareUpdated'));
+  };
+
+  if (loading) return <SkeletonCard />;
+
+  if (error || !property) {
+    return <div className="text-red-500 text-sm">{error}</div>;
+  }
 
   return (
     <Link to={`/property/${property.id}`} className="block relative">
@@ -71,74 +102,66 @@ export function SmallPropertyCard({ property }: SmallPropertyCardProps) {
             src={property.imageUrl}
             alt={property.title}
             className="w-full h-full object-cover"
+            loading="lazy"
           />
 
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex flex-col justify-between p-3 text-white">
-
             <div className="absolute flex flex-col top-2 right-2 space-y-1">
-              {/* <button
-                onClick={(event) => {
-                  event.preventDefault(); 
-                  event.stopPropagation();
-                  console.log('More options clicked');
-                }}
-                className="p-1 rounded-full hover:bg-gray-200 hover:bg-opacity-30"
-                aria-label="More options"
-              >
-                <MoreHorizontal className="w-4 h-4 text-white" />
-              </button> */}
               <button
                 onClick={(event) => {
                   event.preventDefault();
                   event.stopPropagation();
-                  handleWishlistClick()
+                  handleWishlistClick();
                 }}
-                className="p-1 rounded-full bg-black bg-opacity-20 hover:bg-red-200 hover:bg-opacity-30 shadow-lg border border-white rounded full"
+                className={`p-1 rounded-full transition-colors ${
+                  inWishlist ? 'bg-red-100 bg-opacity-50 text-red-500' : 'bg-black bg-opacity-10 text-white hover:bg-gray-200'
+                }`}
+                title={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
                 aria-label="Like property"
               >
-                <Heart className="w-4 h-4 text-white" fill={inWishlist ? 'currentColor' : 'none'}/>
+                <Heart className={`w-4 h-4 ${inWishlist ? 'text-[#ff0000]': 'text-white'}`} fill={inWishlist ? '#FF0000' : 'none'} />
               </button>
               <button
                 onClick={(event) => {
                   event.preventDefault();
                   event.stopPropagation();
-                  handleCompareClick()
+                  handleCompareClick();
                 }}
-                className="p-1 rounded-full hover:bg-blue-200 hover:bg-opacity-30 shadow-lg bg-black bg-opacity-20 border border-white rounded full"
+                className={`p-1 rounded-full transition-colors ${
+                  inCompareList ? 'bg-blue-100 bg-opacity-50 text-blue-500' : 'bg-black bg-opacity-10 text-white hover:bg-gray-200'
+                }`}
+                title={inCompareList ? 'Remove from compare' : 'Add to compare'}
                 aria-label="Compare property"
               >
-                <Scale className="w-4 h-4 text-white" />
+                <Scale className={`w-4 h-4 ${inCompareList ? 'text-[#00a6f4]': 'text-white'}`} fill={inCompareList ? '#00a6f4' : 'none'} />
               </button>
             </div>
 
-            <div className="absolute bottom-2 left-2 text-xs space-y-1 ">
-              {/* <div className="flex items-center">
-                <span className="truncate font-semibold">{property.title}</span>
-              </div> */}
-              
+            <div className="absolute bottom-2 left-2 text-xs space-y-1">
               <div className="flex items-center">
-                <div
-                  className={`bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full flex items-center justify-center p-1 `}
-
-                ><img
+                <div className="bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full flex items-center justify-center p-1">
+                  <img
                     src="https://i.postimg.cc/cHgZjqp8/output-onlinepngtools.png"
                     alt="HouseGPT"
                     className="w-2 h-2"
-                  /></div>
+                  />
+                </div>
                 <span className="truncate font-semibold text-xs ml-1">{property.title}</span>
               </div>
-              <div className='flex flex-row gap-1'>
-              <div className="flex items-center">
-                <span className="truncate font-bold text-[10px] text-sky-600 bg-white px-1 rounded bg-opacity-80">{convertToCroreAndLakh(property.price)}</span>
-              </div>
-              
-              <div className="flex items-center">
-                <MapPin className="w-[10px] h-[10px] mr-0.5 mt-[1px]" />
-                <span className="truncate font-semibold text-[10px]">{extractIndianCity(property.location)}</span>
-              </div>
+              <div className="flex flex-row gap-1">
+                <div className="flex items-center">
+                  <span className="truncate font-bold text-[10px] text-sky-600 bg-white px-1 rounded bg-opacity-80">
+                    {convertToCroreAndLakh(property.price)}
+                  </span>
+                </div>
+                <div className="flex items-center">
+                  <MapPin className="w-[10px] h-[10px] mr-0.5 mt-[1px]" />
+                  <span className="truncate font-semibold text-[10px]">
+                    {extractIndianCity(property.location)}
+                  </span>
+                </div>
               </div>
               <div className="flex flex-row">
-
                 <div className="flex items-center mr-1 font-semibold">
                   <Bed className="w-3 h-3 mr-1" />
                   <span>{property.bedrooms}</span>
@@ -154,28 +177,12 @@ export function SmallPropertyCard({ property }: SmallPropertyCardProps) {
               </div>
             </div>
             <ProgressBar percentage={67} />
-
-            {/* <div className="absolute bottom-2 right-2">
-              <button
-                className={`bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full flex items-center justify-center p-1 animate-bounce`}
-
-              >
-                <img
-                  src="https://i.postimg.cc/cHgZjqp8/output-onlinepngtools.png"
-                  alt="HouseGPT"
-                  className="w-4 h-4"
-                />
-              </button>
-            </div> */}
-
           </div>
         </div>
 
         <div className="p-3 text-xs">
           <h3 className="font-semibold text-sm">{property.title}</h3>
-          <p className="font-bold text-sm mt-1">
-            ₹{property.price.toLocaleString()}
-          </p>
+          <p className="font-bold text-sm mt-1">₹{property.price.toLocaleString()}</p>
         </div>
       </div>
     </Link>

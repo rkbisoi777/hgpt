@@ -83,13 +83,13 @@ export class WishlistService {
 
     static async doesItemExist(userId: string, itemId: string): Promise<boolean> {
         const { data, error } = await supabase
-            .from('compare')
+            .from('wishlist')
             .select('item_ids')
             .eq('user_id', userId)
             .single();
     
         if (error && error.code !== 'PGRST116') {
-            throw new Error(`Error fetching compare list: ${error.message}`);
+            throw new Error(`Error fetching wish list: ${error.message}`);
         }
     
         return data?.item_ids?.includes(itemId) || false;

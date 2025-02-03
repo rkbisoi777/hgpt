@@ -51,6 +51,7 @@ export function Compare() {
             setError('Failed to remove item from compare list');
           }
         }
+        window.dispatchEvent(new Event('compareUpdated'));
       };
     
       if (loading) {

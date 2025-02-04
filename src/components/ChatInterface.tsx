@@ -177,6 +177,7 @@ export function ChatInterface({ initialQuery }: ChatInterfaceProps) {
   const initialQueryProcessed = useRef(false);
   const [chatService, setChatService] = useState<ChatService | null>(null);
   const [currentStreamingMessage, setCurrentStreamingMessage] = useState<string>('');
+  const [suggestedQuestions, setSuggestedQuestions] = useState<string[]>([]);
 
   const { tokens, setTokens } = useToken();
 
@@ -298,7 +299,7 @@ What would you like to know?`,
       const messageId = generateMessageId();
       setMessages(prev => [...prev, { id: messageId, content: '', role: 'assistant' }]);
 
-      const { properties, inputLength, outputLength } = await chatService.processMessage(
+      const { properties, inputLength, outputLength, suggestedQuestions } = await chatService.processMessage(
         content,
         (token) => {
           setCurrentStreamingMessage(prev => prev + token);
@@ -309,6 +310,8 @@ What would you like to know?`,
           ));
         }
       );
+
+      setSuggestedQuestions(suggestedQuestions || []);
 
       const tokensUsed = inputLength + outputLength;
       subtractTokens(tokensUsed);
@@ -332,7 +335,7 @@ What would you like to know?`,
 
   return (
     <div className="flex flex-col h-full relative bg-gray-50">
-      <MessageList messages={messages} isLoading={isLoading} onSendMessage={handleSendMessage} />
+      <MessageList messages={messages} isLoading={isLoading} onSendMessage={handleSendMessage} suggestedQuestions={suggestedQuestions} />
       
       <div className="sticky bottom-1 bg-white mx-1 border rounded-lg shadow-md">
         <div className="max-w-4xl mx-auto w-full">

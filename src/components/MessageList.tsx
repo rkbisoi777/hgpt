@@ -135,32 +135,28 @@
 // }
 
 
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Message } from '../types';
 import { PropertyGrid } from './property/PropertyGrid';
 import { SuggestedQuestions } from './SuggestedQuestions';
-import { generateSuggestions } from '../utils/questionSuggestions';
 import { PreferenceForm } from './PreferenceForm';
+import MemoizedReactMarkdown from './markdown';
 
 interface MessageListProps {
   messages: Message[];
   isLoading: boolean;
   onSendMessage: (message: string) => void;
+  suggestedQuestions: string[]
 }
 
 function formatText(content: string) {
-  return content.split('\n').map((line, i) => (
-    <React.Fragment key={i}>
-      {line.startsWith('•') ? (
-        <li className="ml-4">{line.substring(1).trim()}</li>
-      ) : (
-        <p>{line}</p>
-      )}
-    </React.Fragment>
-  ));
+  // console.log("Before Formatting", content);
+  const pattern = /Suggested questions:[\s\S]*/i;
+  return content.replace(pattern, '').trim();
 }
 
-export function MessageList({ messages, isLoading, onSendMessage }: MessageListProps) {
+
+export function MessageList({ messages, isLoading, onSendMessage, suggestedQuestions }: MessageListProps) {
   const questions = [
     'What is your purpose?',
     'Are you looking to buy or rent?',
@@ -253,7 +249,8 @@ export function MessageList({ messages, isLoading, onSendMessage }: MessageListP
               </div>
             )}
             <div className="text-sm whitespace-pre-wrap">
-              {formatText(message.content)}
+              <MemoizedReactMarkdown content={formatText(message.content)} />
+              {/* {formatText(message.content)} */}
             </div>
           </div>
 
@@ -272,10 +269,11 @@ export function MessageList({ messages, isLoading, onSendMessage }: MessageListP
                   )}
                   {showSuggestions[message.id] && (
                     <div className="mt-2">
-                      <SuggestedQuestions
-                        questions={generateSuggestions(messages[messages.length - 2]?.content || '')}
+                       <SuggestedQuestions
+                      questions={suggestedQuestions}
+                        //questions={generateSuggestions(messages[messages.length - 2]?.content || '')}
                         onQuestionClick={onSendMessage}
-                      />
+                      /> 
                     </div>
                   )}
                 </div>

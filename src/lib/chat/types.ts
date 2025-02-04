@@ -5,6 +5,7 @@ export interface ChatResponse {
   properties?: Property[];
   inputLength: number;
   outputLength: number;
+  suggestedQuestions?: string[];
 }
 
 export interface ChatError extends Error {

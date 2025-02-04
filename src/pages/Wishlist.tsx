@@ -92,7 +92,7 @@ export function Wishlist() {
                   onClick={() => handleRemove(propertyId)}
                   className="absolute top-0 mt-2 right-1 mr-1 bg-red-500 text-white p-1.5 rounded-full hover:bg-red-600 transition"
                 >
-                  <Trash className='size-4' />
+                  <Trash className='size-5' />
                 </button>
               </div>
             ))}

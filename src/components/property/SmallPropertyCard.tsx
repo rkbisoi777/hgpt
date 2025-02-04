@@ -63,8 +63,12 @@ export function SmallPropertyCard({ propertyId }: SmallPropertyCardProps) {
       await removeFromWishlist(propertyId);
       toast.success('Removed from wishlist');
     } else if (property) {
-      await addToWishlist(property);
-      toast.success('Added to wishlist');
+      const added = await addToWishlist(property);
+      if (added) {
+        toast.success('Added to wishlist');
+      } else {
+        toast.error('Wishlist list is full (max 15 properties)');
+      }
     }
 
     window.dispatchEvent(new Event('wishlistUpdated')); 
@@ -114,7 +118,7 @@ export function SmallPropertyCard({ propertyId }: SmallPropertyCardProps) {
                   handleWishlistClick();
                 }}
                 className={`p-1 rounded-full transition-colors ${
-                  inWishlist ? 'bg-red-100 bg-opacity-50 text-red-500' : 'bg-black bg-opacity-10 text-white hover:bg-gray-200'
+                  inWishlist ? 'bg-red-100 bg-opacity-50 text-red-500' : 'bg-black bg-opacity-20 text-white hover:bg-gray-200'
                 }`}
                 title={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
                 aria-label="Like property"
@@ -128,7 +132,7 @@ export function SmallPropertyCard({ propertyId }: SmallPropertyCardProps) {
                   handleCompareClick();
                 }}
                 className={`p-1 rounded-full transition-colors ${
-                  inCompareList ? 'bg-blue-100 bg-opacity-50 text-blue-500' : 'bg-black bg-opacity-10 text-white hover:bg-gray-200'
+                  inCompareList ? 'bg-blue-100 bg-opacity-50 text-blue-500' : 'bg-black bg-opacity-20 text-white hover:bg-gray-200'
                 }`}
                 title={inCompareList ? 'Remove from compare' : 'Add to compare'}
                 aria-label="Compare property"

@@ -38,8 +38,12 @@ export function PropertyActions({ property }: PropertyActionsProps) {
       await removeFromWishlist(property.id);
       toast.success('Removed from wishlist');
     } else {
-      await addToWishlist(property);
-      toast.success('Added to wishlist');
+      const added = await addToWishlist(property);
+      if (added) {
+        toast.success('Added to wishlist');
+      } else {
+        toast.error('Wishlist list is full (max 15 properties)');
+      }
     }
 
     window.dispatchEvent(new Event('wishlistUpdated')); // Event dispatch (optional)

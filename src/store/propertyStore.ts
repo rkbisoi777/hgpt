@@ -123,7 +123,7 @@ interface PropertyStore {
   fetchProperties: () => Promise<void>;
   searchProperties: (query: string) => Promise<Property[]>;
   getPropertyById: (id: string) => Promise<Property | null>;
-  addToWishlist: (property: Property) => void;
+  addToWishlist: (property: Property) => Promise<boolean>;
   removeFromWishlist: (propertyId: string) => void;
   addToCompare: (property: Property) => Promise<boolean>;
   removeFromCompare: (propertyId: string) => void;
@@ -180,19 +180,22 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
   },
   
   // Add to wishlist
-  addToWishlist: async (property) => { 
+  addToWishlist: async (property: Property): Promise<boolean> => { 
     const { data: { session } } = await supabase.auth.getSession();
     const userId = session?.user.id
     if(userId){
       try {
+        const wList = await WishlistService.getWishlist(userId);
+        if (wList.length >= 15) return false; // Limit to 15 properties
         const updatedWishlist = await WishlistService.addItemsToWishlist(userId, [property.id]);
-        set((state) => ({
-          wishlist: updatedWishlist
-        }));
+        set({wishlist: updatedWishlist});
+        return true;
       } catch (error) {
         set({ error: 'Failed to add property to wishlist' });
+        return false;
       }
     }
+    return false;
     
   },
   

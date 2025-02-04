@@ -248,7 +248,7 @@ export function MessageList({ messages, isLoading, onSendMessage, suggestedQuest
                 ))}
               </div>
             )}
-            <div className="text-sm whitespace-pre-wrap">
+            <div className="text-sm whitespace-pre-wrap py-2">
               <MemoizedReactMarkdown content={formatText(message.content)} />
               {/* {formatText(message.content)} */}
             </div>

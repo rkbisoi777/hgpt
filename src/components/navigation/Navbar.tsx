@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, Scale, User } from 'lucide-react';
-// import { usePropertyStore } from '../../store/propertyStore';
 import { useAuthStore } from '../../store/authStore';
 import { NavbarIcon } from './NavbarIcon';
 import { ProfileSidebar } from '../profile/ProfileSidebar';
@@ -124,6 +123,7 @@ export function Navbar() {
                   icon={Heart} 
                   count={wishlistCount}
                   isActive={wishlistCount > 0}
+                  type='wishlist'
                 />
               </Link>
             )}
@@ -133,11 +133,14 @@ export function Navbar() {
                   icon={Scale} 
                   count={compareCount}
                   isActive={compareCount > 0}
+                  type='compare'
                 />
               </Link>
             )}
             <button onClick={() => setShowProfileSidebar(true)}>
-              <NavbarIcon icon={User} />
+            <div className="relative p-2 hover:bg-gray-100 rounded-full transition-colors">
+              <User className={`w-5 h-5 text-blue-500`} fill={`currentColor`}/>
+            </div>
             </button>
           </>
         ) : (

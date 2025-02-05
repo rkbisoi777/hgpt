@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Scale } from 'lucide-react';
 import { CompareTable } from '../components/compare/CompareTable';
 import { CompareService } from '../lib/CompareService';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/supabaseClient';
 import toast from 'react-hot-toast';
 
 export function Compare() {

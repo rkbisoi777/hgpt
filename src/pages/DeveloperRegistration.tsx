@@ -155,7 +155,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabase';  // Assuming your supabase client is here
+import { supabase } from '../lib/supabaseClient';  // Assuming your supabase client is here
 import { toast } from 'react-hot-toast';
 
 export function DeveloperRegistration() {

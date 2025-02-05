@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/supabaseClient';
 import { AuthState, ProfileUpdate } from '../types/auth';
 import toast from 'react-hot-toast';
 import { Profile, ProfileService } from '../lib/profileService';

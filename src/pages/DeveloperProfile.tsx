@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/supabaseClient';
 import { Developer } from '../types/auth';
 import { Property } from '../types';
 import { PropertyCard } from '../components/property/PropertyCard';
-import { Globe, Mail, Phone, MapPin, Building } from 'lucide-react';
+import { Globe, MapPin, Building } from 'lucide-react';
 import { DeveloperChatButton } from '../components/chat/DeveloperChatButton';
 
 export function DeveloperProfile() {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 import { PropertyChatDialog } from './PropertyChatDialog';
 import { Property } from '../../types';
@@ -11,11 +11,11 @@ export function PropertyChatButton({ property }: PropertyChatButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const chatButtonRef = useRef<HTMLButtonElement | null>(null);
-   const [showMessage, setShowMessage] = useState(false);
+  // const [showMessage, setShowMessage] = useState(false);
 
-  const handleCloseMessage = () => {
-    setShowMessage(false);
-  };
+  // const handleCloseMessage = () => {
+  //   setShowMessage(false);
+  // };
 
   // Prevent scrolling when modal is open
   useEffect(() => {
@@ -35,7 +35,7 @@ export function PropertyChatButton({ property }: PropertyChatButtonProps) {
   // Show proactive message after 3 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
-      setShowMessage(true);
+      // setShowMessage(true);
     }, 3000); // Change time as per your requirement
     return () => clearTimeout(timer); // Clean up timer when component unmounts
   }, []);
@@ -43,28 +43,29 @@ export function PropertyChatButton({ property }: PropertyChatButtonProps) {
   return (
     <>
       {/* Chat Button */}
-       {showMessage && (
-        
-      <div className="fixed bottom-20 right-6 flex flex-row z-50 w-[300px] max-w-1/2 animate-pulse">
-        <div className=" px-2  bg-white text-gray-800 p-1 rounded-l-lg rounded-t-lg shadow-lg text-sm border border-blue-500 mb-2">
-          <div className="flex flex-col">
-            <span>Hi!, I’m HouseGPT! I can help with <b>{property.title}</b></span>
-<p> 📊 Property details </p>
-<p>💰 Pricing info</p>
-<p>🏙️ Neighborhood insights</p>
-<p>🗓️ Booking a visit</p>
-<p>What would you like to know?</p>
+      {/* {showMessage && (
+
+        <div className="fixed bottom-20 right-6 flex flex-row z-50 w-[300px] max-w-1/2 animate-pulse">
+          <div className=" px-2  bg-white text-gray-800 p-1 rounded-l-lg rounded-t-lg shadow-lg text-sm border border-blue-500 mb-2">
+            <div className="flex flex-col">
+              <span>Hi!, I’m HouseGPT! I can help with <b>{property.title}</b></span>
+              <p> 📊 Property details </p>
+              <p>💰 Pricing info</p>
+              <p>🏙️ Neighborhood insights</p>
+              <p>🗓️ Booking a visit</p>
+              <p>What would you like to know?</p>
+            </div>
+
           </div>
-         
-        </div>
           <button
             onClick={handleCloseMessage}
             className="w-6 h-6 top-2 right-2 ml-1 text-gray-600 bg-white shadow-md text-xs border border-blue-500 rounded-full py-0.5 px-1.5"
           >
-           <i className="fas fa-xmark"></i>
+            <i className="fas fa-xmark"></i>
           </button>
-      </div>
-      )}
+        </div>
+      )} */}
+
       <button
         ref={chatButtonRef}
         onClick={() => setIsOpen(true)}
@@ -73,12 +74,13 @@ export function PropertyChatButton({ property }: PropertyChatButtonProps) {
         aria-expanded={isOpen}
         aria-controls="property-chat-dialog"
       >
-        <div className="w-8 h-8">
+        <div className="relative w-8 h-8">
           <img
             src="https://i.postimg.cc/cHgZjqp8/output-onlinepngtools.png"
             alt="HouseGPT"
           />
         </div>
+        <div className="absolute top-0 right-0 w-3 h-3 bg-red-500 text-white text-xs rounded-full flex items-center justify-center p-1"></div>
       </button>
 
       {/* Chat Modal */}

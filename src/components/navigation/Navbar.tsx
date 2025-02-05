@@ -7,7 +7,7 @@ import { ProfileSidebar } from '../profile/ProfileSidebar';
 import { useToken } from '../TokenContext';
 import { toast } from 'react-hot-toast';
 import { TokenService } from '../../lib/tokenService';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../lib/supabaseClient';
 import { WishlistService } from '../../lib/WishlistService';
 import { CompareService } from '../../lib/CompareService';
 

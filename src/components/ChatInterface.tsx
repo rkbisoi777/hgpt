@@ -9,7 +9,7 @@ import { toast } from 'react-hot-toast';
 import { ChatServiceError } from '../lib/chat/errors';
 import { useToken } from './TokenContext';
 import { TokenService } from '../lib/tokenService';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/supabaseClient';
 
 const DAILY_LIMIT = 5000;
 

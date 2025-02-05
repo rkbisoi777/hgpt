@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { PropertyCard } from '../components/property/PropertyCard';
 import { Heart, Trash } from 'lucide-react';
 import { WishlistService } from '../lib/WishlistService';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/supabaseClient';
 import toast from 'react-hot-toast';
 
 export function Wishlist() {

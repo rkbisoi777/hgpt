@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/supabaseClient';
 import { Property } from '../types';
 import { Developer } from '../types/auth';
 import { Building, Plus, Settings, BarChart2 } from 'lucide-react';

@@ -111,7 +111,7 @@ import type { Property } from '../types/database';
 import { propertyService } from '../lib/propertyService';
 import { WishlistService } from '../lib/WishlistService';
 import { CompareService } from '../lib/CompareService';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/supabaseClient';
 
 
 interface PropertyStore {

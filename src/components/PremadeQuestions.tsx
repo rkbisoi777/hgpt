@@ -28,7 +28,7 @@ export function PremadeQuestions({ onQuestionClick }: PremadeQuestionsProps) {
     { text: "Pet-friendly apartments in Mumbai", icon: "🐾" },
     { text: "Tips to avoid real estate scams", icon: "🚨" },
     { text: "Eco-friendly housing options", icon: "🌱" },
-    { text: "Top gated communities in Mumbai", icon: "🔒" },
+    { text: "Top gated communities in Mumbai", icon: "🔒" }
   ];
 
   return (

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ChatInput } from '../ChatInput';
 import { Message } from '../../types';
-import { ChatService } from '../../lib/chat/chatService';
+import { ChatService } from '../../lib/chat/langchainChatService';
 import { generateMessageId } from '../../utils/messageUtils';
 import { toast } from 'react-hot-toast';
 import { Property } from '../../types';
@@ -25,13 +25,19 @@ export function PropertyChatDialog({ property }: PropertyChatDialogProps) {
         setMessages([
           {
             id: generateMessageId(),
-            content: `Hi! I'm your AI assistant for **${property.title}**. I can help you with:
+            content: `
+Hi! I'm your AI assistant for
+
+${property.title}
+
+I can help you with:
 - 📊 Property details and features  
 - 💰 Pricing and market analysis  
 - 🏙️ Neighborhood information  
 - 🗓️ Booking a site visit  
 
-What would you like to know?`,
+What would you like to know?
+`,
             role: 'assistant',
           },
         ]);
@@ -43,7 +49,6 @@ What would you like to know?`,
     initChat();
   }, [property.title]);
 
-  // Handle User Message
   const handleSendMessage = async (content: string) => {
     if (!chatService) {
       toast.error('Chat service is not available');
@@ -66,17 +71,25 @@ What would you like to know?`,
 Regarding the property titled "${property.title}", located at ${property.location}, priced at $${property.price}, featuring ${property.bedrooms} bedrooms, ${property.bathrooms} bathrooms, and ${property.sqft} sqft:
 
 User Query: "${content}"
-      `.trim();
+    `.trim();
 
-      const { response } = await chatService.processMessage(contextualizedQuery);
+      let responseText = '';
 
-      const aiMessage: Message = {
-        id: generateMessageId(),
-        content: response || "I'm sorry, I couldn't retrieve the information. Please try again.",
-        role: 'assistant',
+      // Handle streaming response tokens
+      const onToken = (token: string) => {
+        responseText += token;
+        setMessages((prev) => {
+          const lastMessage = prev[prev.length - 1];
+          if (lastMessage?.role === 'assistant') {
+            return [...prev.slice(0, -1), { ...lastMessage, content: responseText }];
+          } else {
+            return [...prev, { id: generateMessageId(), content: responseText, role: 'assistant' }];
+          }
+        });
       };
 
-      setMessages((prev) => [...prev, aiMessage]);
+      await chatService.processMessage(contextualizedQuery, onToken);
+
     } catch (error) {
       console.error('Chat Message Error:', error);
       toast.error('Failed to get a response. Please try again later.');
@@ -84,6 +97,7 @@ User Query: "${content}"
       setIsLoading(false);
     }
   };
+
 
   return (
     <div className="flex flex-col h-full rounded-lg">

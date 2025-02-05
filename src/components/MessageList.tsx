@@ -140,7 +140,7 @@ import { Message } from '../types';
 import { PropertyGrid } from './property/PropertyGrid';
 import { SuggestedQuestions } from './SuggestedQuestions';
 import { PreferenceForm } from './PreferenceForm';
-import MemoizedReactMarkdown from './markdown';
+import {MemoizedReactMarkdown} from './markdown';
 
 interface MessageListProps {
   messages: Message[];

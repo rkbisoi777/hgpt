@@ -1,5 +1,11 @@
-import React from 'react';
 import { Message } from '../../types';
+import {MemoizedReactMarkdown2} from '../markdown';
+
+function formatText(content: string) {
+  console.log("Before Formatting", content);
+  const pattern = /Suggested questions:[\s\S]*/i;
+  return content.replace(pattern, '').trim();
+}
 
 interface PropertyChatMessagesProps {
   messages: Message[];
@@ -21,7 +27,7 @@ export function PropertyChatMessages({ messages, isLoading }: PropertyChatMessag
                 : 'bg-gray-100 text-gray-800'
             }`}
           >
-            {message.content}
+             <MemoizedReactMarkdown2 content={formatText(message.content)} />
           </div>
         </div>
       ))}

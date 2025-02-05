@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import ReactMarkdown from 'react-markdown';
 
-const MemoizedReactMarkdown = memo(({ content }: { content: string }) => {
+export const MemoizedReactMarkdown = memo(({ content }: { content: string }) => {
     return (
         <ReactMarkdown
             children={content}
@@ -24,5 +24,24 @@ const MemoizedReactMarkdown = memo(({ content }: { content: string }) => {
 });
 
 
-
-export default MemoizedReactMarkdown;
+export const MemoizedReactMarkdown2 = memo(({ content }: { content: string }) => {
+    return (
+        <ReactMarkdown
+            children={content}
+            components={{
+                ul: ({ children }) => (
+                    <ul className="ml-4">{children}</ul>  
+                ),
+                li: ({ children }) => (
+                    <li className="ml-4 list-disc">{children}</li>  
+                ),
+                p: ({ children }) => (
+                    <p>{children}</p>  
+                ),
+                strong: ({ children }) => (
+                    <strong>{children}</strong>
+                ),
+            }}
+        />
+    );
+});

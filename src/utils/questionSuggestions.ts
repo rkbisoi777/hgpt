@@ -148,3 +148,22 @@ export function generateSuggestions(message: string): string[] {
 //     matchingRules.flatMap(rule => rule.suggestions)
 //   )).slice(0, 4);
 // }
+
+
+export async function convertToFirstPersonUsingGemini(question: string): Promise<string> {
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY; // Replace with your actual API key
+  const apiUrl = "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateText?key=" + apiKey;
+
+  const requestBody = {
+    prompt: { text: `Convert the following question into a first-person statement:\n"${question}"` },
+  };
+
+  const response = await fetch(apiUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(requestBody),
+  });
+
+  const data = await response.json();
+  return data.candidates?.[0]?.output || "Conversion failed.";
+}

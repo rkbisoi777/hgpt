@@ -7,13 +7,13 @@ const MemoizedReactMarkdown = memo(({ content }: { content: string }) => {
             children={content}
             components={{
                 ul: ({ children }) => (
-                    <ul className="ml-4 font-semibold -mt-4">{children}</ul>  
+                    <ul className="ml-4 -mt-4">{children}</ul>  
                 ),
                 li: ({ children }) => (
-                    <li className="ml-4 font-semibold -my-1 list-disc">{children}</li>  
+                    <li className="ml-4 -my-1 list-disc">{children}</li>  
                 ),
                 p: ({ children }) => (
-                    <p className="ml-4 -my-1">{children}</p>  
+                    <p className="-my-1">{children}</p>  
                 ),
                 strong: ({ children }) => (
                     <strong className="-my-1">{children}</strong>

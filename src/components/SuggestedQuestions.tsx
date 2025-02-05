@@ -1,4 +1,3 @@
-import React from 'react';
 import { MessageSquarePlus } from 'lucide-react';
 
 interface SuggestedQuestionsProps {

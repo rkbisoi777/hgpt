@@ -150,7 +150,7 @@ interface MessageListProps {
 }
 
 function formatText(content: string) {
-  // console.log("Before Formatting", content);
+  console.log("Before Formatting", content);
   const pattern = /Suggested questions:[\s\S]*/i;
   return content.replace(pattern, '').trim();
 }
@@ -248,7 +248,7 @@ export function MessageList({ messages, isLoading, onSendMessage, suggestedQuest
                 ))}
               </div>
             )}
-            <div className="text-sm whitespace-pre-wrap py-2">
+            <div className="text-sm whitespace-pre-wrap py-2 px-1">
               <MemoizedReactMarkdown content={formatText(message.content)} />
               {/* {formatText(message.content)} */}
             </div>

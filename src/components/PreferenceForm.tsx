@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import axios from "axios";
+import toast from 'react-hot-toast';
 
-// Utility function to manage cookies
+// Cookie utilities
 const setCookie = (name: string, value: string, days: number) => {
   const expires = new Date();
   expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
@@ -18,20 +20,15 @@ interface Preferences {
   purpose: string;
   buyOrRent: string;
   propertyType: string;
+  configuration: string;
   budget: string;
   city: string;
   locality: string;
-  transport: string;
-  configuration: string;
   readiness: string;
-  amenities: string[];
-  facilities: string;
-  gated: boolean | null;
-  environment: string[];
-  appreciation: boolean | null;
-  insights: boolean | null;
-  additionalInfo: string;
   decisionTime: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
 }
 
 interface PreferenceFormProps {
@@ -46,37 +43,37 @@ export function PreferenceForm({ onSubmit, answers, questions }: PreferenceFormP
     return savedPreferences
       ? JSON.parse(savedPreferences)
       : {
-          purpose: '',
-          buyOrRent: '',
-          propertyType: '',
-          budget: '',
-          city: '',
-          locality: '',
-          transport: '',
-          configuration: '',
-          readiness: '',
-          amenities: [],
-          facilities: '',
-          gated: null,
-          environment: [],
-          appreciation: null,
-          insights: null,
-          additionalInfo: '',
-          decisionTime: '',
-        };
+        purpose: '',
+        buyOrRent: '',
+        propertyType: '',
+        budget: '',
+        city: '',
+        locality: '',
+        configuration: '',
+        readiness: '',
+        decisionTime: '',
+        name: '',
+        email: '',
+        phoneNumber: ''
+      };
   });
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isPreferencesExist, setIsPreferencesExist] = useState(false);
+  const [shouldHide, setShouldHide] = useState(false);
 
   useEffect(() => {
-    // Check if userPreferences cookie already exists
+    // Check if userPreferences cookie exists
     const savedPreferences = getCookie('userPreferences');
     if (savedPreferences) {
-      setIsPreferencesExist(true);
+      setShouldHide(true);
     }
   }, []);
+
+  // Check if all required fields are filled
+  // const areAllFieldsFilled = (prefs: Preferences): boolean => {
+  //   return Object.values(prefs).every(value => value !== '');
+  // };
 
   useEffect(() => {
     // Check if preferences are fully filled
@@ -90,18 +87,53 @@ export function PreferenceForm({ onSubmit, answers, questions }: PreferenceFormP
     }
   }, [preferences, questions]);
 
-  const handleAnswer = (field: keyof Preferences, value: string) => {
-    setPreferences((prev) => {
-      const updatedPreferences = { ...prev, [field]: value };
-      setCookie('userPreferences', JSON.stringify(updatedPreferences), 30); // Save for 30 days
-      onSubmit(updatedPreferences);
-      return updatedPreferences;
-    });
-
+  const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-    } else {
-      setIsSubmitted(true);
+    }
+  };
+
+  const addToGoogleSheet = async (data:any) => {
+    try {
+      const response = await axios.post(
+        "https://script.google.com/macros/s/AKfycbywu-mQdfsAsqcG2Mh4WYatd3WeD0ScByv9o1rmTq-IsaoM5yJAvmA-2OCX7m68MPSU2g/exec", 
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+      )
+      if(response.status === 200){
+        toast.success("Data added successfully!");
+      }
+      
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+
+  const handleAnswer = async (field: keyof Preferences, value: string) => {
+    const updatedPreferences = { ...preferences, [field]: value };
+    setPreferences(updatedPreferences);
+
+    // Always save to cookies
+    setCookie('userPreferences', JSON.stringify(updatedPreferences), 30);
+    onSubmit(updatedPreferences);
+
+    // If this is the last field and all fields are filled, save to Supabase
+    if(field == 'phoneNumber') {
+      try {
+        addToGoogleSheet(updatedPreferences)
+        console.log(updatedPreferences)
+        setIsSubmitted(true);
+      } catch (error) {
+        console.error('Failed to save preferences:', error);
+        // You might want to show an error message to the user here
+      }
+    } else if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
   };
 
@@ -110,6 +142,14 @@ export function PreferenceForm({ onSubmit, answers, questions }: PreferenceFormP
     'Are you looking to buy or rent?': 'buyOrRent',
     'What type of property?': 'propertyType',
     'What is your budget range?': 'budget',
+    'Which city are you looking in?': 'city',
+    'Do you have a preferred locality?': 'locality',
+    'What is your preferred configuration?': 'configuration',
+    'When do you need the property?': 'readiness',
+    'How soon do you plan to make a decision?': 'decisionTime',
+    'Your name': 'name',
+    'Your email': 'email',
+    'Your phone number': 'phoneNumber'
   };
 
   const renderQuestion = () => {
@@ -141,9 +181,8 @@ export function PreferenceForm({ onSubmit, answers, questions }: PreferenceFormP
                 <button
                   type="button"
                   key={option}
-                  className={`px-3 py-1 text-sm rounded-md ${
-                    preferences.buyOrRent === option ? 'bg-blue-500 text-white' : 'bg-gray-100'
-                  }`}
+                  className={`px-3 py-1 text-sm rounded-md ${preferences.buyOrRent === option ? 'bg-blue-500 text-white' : 'bg-gray-100'
+                    }`}
                   onClick={() => handleAnswer('buyOrRent', option)}
                 >
                   {option}
@@ -164,8 +203,8 @@ export function PreferenceForm({ onSubmit, answers, questions }: PreferenceFormP
               <option value="">Select</option>
               <option value="Apartment/Flat">Apartment/Flat</option>
               <option value="Independent House/Villa">Independent House/Villa</option>
-              <option value="Plot/Land">Plot/Land</option>
-              <option value="Commercial Property">Commercial Property</option>
+              {/* <option value="Plot/Land">Plot/Land</option> */}
+              {/* <option value="Commercial Property">Commercial Property</option> */}
             </select>
           </div>
         );
@@ -186,15 +225,176 @@ export function PreferenceForm({ onSubmit, answers, questions }: PreferenceFormP
             </select>
           </div>
         );
+
+      case 'Which city are you looking in?':
+        return (
+          <div className="mb-1 w-full">
+            <label className="block text-sm font-medium mb-2">Which city are you looking in?</label>
+            <select
+              value={preferences.city}
+              onChange={(e) => handleAnswer('city', e.target.value)}
+              className="w-full p-1 text-sm border rounded-md"
+            >
+              <option value="">Select</option>
+              <option value="Bangalore">Bangalore</option>
+              <option value="Mumbai">Mumbai</option>
+              <option value="Delhi">Delhi</option>
+              <option value="Hyderabad">Hyderabad</option>
+              <option value="Chennai">Chennai</option>
+              <option value="Pune">Pune</option>
+            </select>
+          </div>
+        );
+
+      case 'Do you have a preferred locality?':
+        return (
+          <div className="mb-1 w-full">
+            <label className="block text-sm font-medium mb-2">Do you have a preferred locality?</label>
+            <input
+              type="text"
+              value={preferences.locality}
+              onChange={(e) => setPreferences({ ...preferences, locality: e.target.value })}
+              onBlur={() => handleAnswer('locality', preferences.locality)}
+              placeholder="Enter preferred locality"
+              className="w-full p-1 text-sm border rounded-md"
+            />
+            <div className="flex justify-end">
+            <button onClick={handleNext} className="mt-1.5 px-2 py-1 text-xs bg-blue-500 text-white rounded-md">Next</button>
+            </div>
+            
+
+          </div>
+        );
+
+      case 'What is your preferred configuration?':
+        return (
+          <div className="mb-1 w-full">
+            <label className="block text-sm font-medium mb-2">What is your preferred configuration?</label>
+            <select
+              value={preferences.configuration}
+              onChange={(e) => handleAnswer('configuration', e.target.value)}
+              className="w-full p-1 text-sm border rounded-md"
+            >
+              <option value="">Select</option>
+              <option value="1 BHK">1 BHK</option>
+              <option value="2 BHK">2 BHK</option>
+              <option value="3 BHK">3 BHK</option>
+              <option value="4 BHK">4 BHK</option>
+              <option value="5+ BHK">5+ BHK</option>
+            </select>
+          </div>
+        );
+
+      case 'When do you need the property?':
+        return (
+          <div className="mb-1 w-full">
+            <label className="block text-sm font-medium mb-2">When do you need the property?</label>
+            <select
+              value={preferences.readiness}
+              onChange={(e) => handleAnswer('readiness', e.target.value)}
+              className="w-full p-1 text-sm border rounded-md"
+            >
+              <option value="">Select</option>
+              <option value="Immediate">Immediate</option>
+              <option value="Within 3 months">Within 3 months</option>
+              <option value="3-6 months">3-6 months</option>
+              <option value="6-12 months">6-12 months</option>
+              <option value="More than 12 months">More than 12 months</option>
+            </select>
+          </div>
+        );
+
+      case 'How soon do you plan to make a decision?':
+        return (
+          <div className="mb-1 w-full">
+            <label className="block text-sm font-medium mb-2">How soon do you plan to make a decision?</label>
+            <select
+              value={preferences.decisionTime}
+              onChange={(e) => handleAnswer('decisionTime', e.target.value)}
+              className="w-full p-1 text-sm border rounded-md"
+            >
+              <option value="">Select</option>
+              <option value="Immediately">Immediately</option>
+              <option value="Within 1 week">Within 1 week</option>
+              <option value="Within 1 month">Within 1 month</option>
+              <option value="More than 1 month">More than 1 month</option>
+            </select>
+          </div>
+        );
+
+      case 'Your name':
+        return (
+          <div className="mb-1 w-full">
+            <label className="block text-sm font-medium mb-2">Your name</label>
+            <input
+              type="text"
+              value={preferences.name}
+              onChange={(e) => setPreferences({ ...preferences, name: e.target.value })}
+              onBlur={() => handleAnswer('name', preferences.name)}
+              placeholder="Enter your name"
+              className="w-full p-1 text-sm border rounded-md"
+            />
+            <div className="flex justify-end">
+            <button onClick={handleNext} className="mt-1.5 px-2 py-1 text-xs bg-blue-500 text-white rounded-md">Next</button>
+            </div>
+            
+
+          </div>
+        );
+
+      case 'Your email':
+        return (
+          <div className="mb-1 w-full">
+            <label className="block text-sm font-medium mb-2">Your email</label>
+            <input
+              type="email"
+              value={preferences.email}
+              onChange={(e) => setPreferences({ ...preferences, email: e.target.value })}
+              onBlur={() => handleAnswer('email', preferences.email)}
+              placeholder="Enter your email"
+              className="w-full p-1 text-sm border rounded-md"
+            />
+            <div className="flex justify-end">
+            <button onClick={handleNext} className="mt-1.5 px-2 py-1 text-xs bg-blue-500 text-white rounded-md">Next</button>
+            </div>
+            
+          </div>
+        );
+
+      case 'Your phone number':
+        return (
+          <div className="mb-1 w-full">
+            <label className="block text-sm font-medium mb-2">Your phone number</label>
+            <input
+              type="tel"
+              value={preferences.phoneNumber}
+              onChange={(e) => setPreferences({ ...preferences, phoneNumber: e.target.value })}
+              onBlur={() => handleAnswer('phoneNumber', preferences.phoneNumber)}
+              placeholder="Enter your phone number"
+              className="w-full p-1 text-sm border rounded-md"
+              pattern="[0-9]*"
+              maxLength={10}
+            />
+            <div className="flex justify-end">
+            <button 
+              onClick={() => {handleAnswer('phoneNumber', preferences.phoneNumber)
+              }} 
+              className="mt-1.5 px-2 py-1 text-xs bg-blue-500 text-white rounded-md"
+            >
+              Submit
+            </button>
+            </div>
+          </div>
+        );
+
       default:
         return null;
     }
   };
 
-  if (isPreferencesExist) {
-    return null; // Hide the component if preferences already exist in cookies
+  if (shouldHide) {
+    return null;
   }
-
 
   return (
     <div className="mt-2">

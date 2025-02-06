@@ -13,7 +13,7 @@ interface MessageListProps {
 }
 
 function formatText(content: string) {
-  console.log("Before Formatting", content);
+  // console.log("Before Formatting", content);
   const pattern = /Suggested questions:[\s\S]*/i;
   return content.replace(pattern, '').trim();
 }
@@ -25,6 +25,14 @@ export function MessageList({ messages, isLoading, onSendMessage, suggestedQuest
     'Are you looking to buy or rent?',
     'What type of property?',
     'What is your budget range?',
+    'Which city are you looking in?',
+    'Do you have a preferred locality?',
+    'What is your preferred configuration?',
+    'When do you need the property?',
+    'How soon do you plan to make a decision?',
+    'Your name',
+    'Your email',
+    'Your phone number'
   ];
 
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -36,14 +44,16 @@ export function MessageList({ messages, isLoading, onSendMessage, suggestedQuest
       ...prev,
       ...draftAnswers,
     }));
+    setDraftAnswers({}); // Clear draft answers after submission
   };
+  
 
-  const handleDraftChange = (question: string, answer: string) => {
-    setDraftAnswers((prev) => ({
-      ...prev,
-      [question]: answer,
-    }));
-  };
+  // const handleDraftChange = (question: string, answer: string) => {
+  //   setDraftAnswers((prev) => ({
+  //     ...prev,
+  //     [question]: answer,
+  //   }));
+  // };
 
   const isPreferenceFilled = questions.every((q) => answers[q]);
 
@@ -63,7 +73,7 @@ export function MessageList({ messages, isLoading, onSendMessage, suggestedQuest
         <div key={message.id}>
           <div className={`${message.role === 'user'
             ? 'ml-auto bg-gradient-to-r from-cyan-500 to-blue-500 text-white max-w-[80%]'
-            : `${(message.content == '') ? 'bg-gray-50 h-[0px]' : ' bg-gray-100'} max-w-[80%]`
+            : `${(message.content == '') ? 'bg-gray-50 h-[1px] -mt-4' : ' bg-gray-100'} max-w-[80%]`
             } p-1.5 px-2 rounded-lg`}>
             <div className="text-sm whitespace-pre-wrap py-2 px-1">
               <MemoizedReactMarkdown content={formatText(message.content)} />
@@ -79,7 +89,7 @@ export function MessageList({ messages, isLoading, onSendMessage, suggestedQuest
                   {!isPreferenceFilled && (
                     <PreferenceForm
                       questions={questions}
-                      answers={answers}
+                      answers={draftAnswers}
                       onSubmit={handlePreferenceSubmit}
                     />
                   )}

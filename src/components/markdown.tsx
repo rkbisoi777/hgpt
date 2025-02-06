@@ -7,7 +7,7 @@ export const MemoizedReactMarkdown = memo(({ content }: { content: string }) => 
             children={content}
             components={{
                 ul: ({ children }) => (
-                    <ul className="ml-4 -mt-4">{children}</ul>  
+                    <ul className="ml-4 -my-6">{children}</ul>  
                 ),
                 li: ({ children }) => (
                     <li className="ml-4 -my-1 list-disc">{children}</li>  

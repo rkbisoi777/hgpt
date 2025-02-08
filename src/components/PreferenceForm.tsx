@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import axios from "axios";
-import toast from 'react-hot-toast';
+// import toast from 'react-hot-toast';
+// import db from '../lib/firebase';
+// import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
+
 
 // Cookie utilities
 const setCookie = (name: string, value: string, days: number) => {
@@ -62,6 +65,8 @@ export function PreferenceForm({ onSubmit, answers, questions }: PreferenceFormP
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [shouldHide, setShouldHide] = useState(false);
 
+  // const db = getFirestore();
+
   useEffect(() => {
     // Check if userPreferences cookie exists
     const savedPreferences = getCookie('userPreferences');
@@ -93,26 +98,78 @@ export function PreferenceForm({ onSubmit, answers, questions }: PreferenceFormP
     }
   };
 
-  const addToGoogleSheet = async (data:any) => {
-    try {
-      const response = await axios.post(
-        "https://script.google.com/macros/s/AKfycbywu-mQdfsAsqcG2Mh4WYatd3WeD0ScByv9o1rmTq-IsaoM5yJAvmA-2OCX7m68MPSU2g/exec", 
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
-      )
-      if(response.status === 200){
-        toast.success("Data added successfully!");
-      }
+  // const addToAirtable = async (data:any) => {
+  //   const baseID = import.meta.env.AIRTABLE_BASE_ID
+  //   const tableName = import.meta.env.AIRTABLE_TABLENAME
+  //   const token = import.meta.env.AIRTABLE_ACCESS_TOKEN
+  //   try {
+  //     const response = await axios.post(
+  //       `https://api.airtable.com/v0/${baseID}/${tableName}`, 
+  //       {
+  //         records: [
+  //           {
+  //             fields: data, 
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     )
+  //     if(response.status === 200){
+  //       toast.success("Data added successfully!");
+  //     }
       
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // };
 
+  // const addToFireStore = async (data:any) => {
+  //   const myCollection = collection(db, 'user_preference'); 
+  //       const newDocRef = doc(myCollection);
+  //       setDoc(newDocRef, data).then(() => {
+  //         console.log('Document written with ID:', newDocRef.id);
+  //       })
+  //       .catch(error => {
+  //         console.error('Error adding document:', error);
+  //       });
+  // }
+
+  // const sendToGoogleSheet = async (jsonData:any) => {
+  //   const SHEET_ID = "1WgAKAxE7-MUWP2cnr6Pr1h5f5QfIOGXXFJN76iwxb08"; // Replace with your Google Sheet ID
+  //   const API_KEY = "AIzaSyDcT0so2obBwcOX0OKOzPASRmFBzFqE0oc"; // Replace with your API Key
+  //   const URL = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS&key=${API_KEY}`;
+  
+  //   const data = { values: jsonData };
+  
+  //   try {
+  //     const response = await axios.post(URL, data, {
+  //       headers: { "Content-Type": "application/json" },
+  //     });
+  //     console.log("Data successfully sent to Google Sheets:", response.data);
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error("Error sending data to Google Sheets:", error);
+  //     throw error;
+  //   }
+  // };
+
+  // const sendToGoogleSheet = async (jsonData: any) => {
+  //   const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwbT6AxWrzHmSG1brTQ-Kr56mNCZ2S3WH6auRBQK45su9XdfZ3zL7ULfbBHtXqf4ywzIQ/exec'
+  //   try {
+  //     const response = await axios.post(GOOGLE_SCRIPT_URL, { values: jsonData }, {
+  //       headers: { "Content-Type": "application/json" },
+  //     });
+  
+  //     console.log("Data sent successfully:", response.data);
+  //   } catch (error) {
+  //     console.error("Error sending data:", error);
+  //   }
+  // };
 
   const handleAnswer = async (field: keyof Preferences, value: string) => {
     const updatedPreferences = { ...preferences, [field]: value };
@@ -125,8 +182,10 @@ export function PreferenceForm({ onSubmit, answers, questions }: PreferenceFormP
     // If this is the last field and all fields are filled, save to Supabase
     if(field == 'phoneNumber') {
       try {
-        addToGoogleSheet(updatedPreferences)
-        console.log(updatedPreferences)
+        // sendToGoogleSheet(updatedPreferences)
+        // addToFireStore(updatedPreferences)
+        // addToAirtable(updatedPreferences)
+        // console.log(updatedPreferences)
         setIsSubmitted(true);
       } catch (error) {
         console.error('Failed to save preferences:', error);

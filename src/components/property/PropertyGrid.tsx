@@ -15,10 +15,10 @@ export function PropertyGrid({ properties, maxInitialDisplay = 4 }: PropertyGrid
   const displayedProperties = properties.slice(0, maxInitialDisplay);
 
   return (
-    <div className="space-y-2 bg-gray-50">
+    <div className="space-y-2 bg-white">
       {/* <p className="text-xs">{JSON.stringify(properties)}</p> */}
-      <div className="overflow-x-auto bg-gray-50">
-        <div className="grid grid-flow-col auto-cols-max gap-2 bg-gray-50">
+      <div className="overflow-x-auto bg-white">
+        <div className="grid grid-flow-col auto-cols-max gap-2 bg-white">
           {displayedProperties.map(property => (
             // <PropertyCard key={property.id} property={property} compact />
             <SmallPropertyCard key={property.id} propertyId={property.id} />

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Heart, Scale } from 'lucide-react';
+import { Heart, Scale, Share2 } from 'lucide-react';
 import { Property } from '../../types';
 import { usePropertyStore } from '../../store/propertyStore';
 import { toast } from 'react-hot-toast';
@@ -69,6 +69,30 @@ export function PropertyActions({ property }: PropertyActionsProps) {
     window.dispatchEvent(new Event('compareUpdated')); // Event dispatch (optional)
   }, [inCompareList, property.id, addToCompare, removeFromCompare]);
 
+  // Handle share button click
+  const handleShareClick = async () => {
+    const propertyUrl = window.location.href; // Get the current URL
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `Check out this property: ${property.title}`,
+          url: propertyUrl
+        });
+      } catch (error) {
+        toast.error('Could not share the property.');
+      }
+    } else {
+      // Fallback: Copy to clipboard
+      try {
+        await navigator.clipboard.writeText(propertyUrl);
+        toast.success('Property link copied to clipboard!');
+      } catch (error) {
+        toast.error('Failed to copy the link.');
+      }
+    }
+  };
+
   return (
     <div className="flex gap-2">
       <button
@@ -89,6 +113,14 @@ export function PropertyActions({ property }: PropertyActionsProps) {
         title={inCompareList ? 'Remove from compare' : 'Add to compare'}
       >
         <Scale className="w-5 h-5 sm:w-6 sm:h-6" fill={inCompareList ? 'currentColor' : 'none'} />
+      </button>
+
+      <button
+        onClick={handleShareClick}
+        className="p-2 rounded-full transition-colors bg-gray-100 text-gray-500 hover:bg-gray-200"
+        title="Share property"
+      >
+        <Share2  className="w-5 h-5 sm:w-6 sm:h-6" />
       </button>
     </div>
   );

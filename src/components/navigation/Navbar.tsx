@@ -110,10 +110,10 @@ export function Navbar() {
   return (
     <nav>
       <div className="flex items-center gap-3">
-        <p className="font-semibold text-blue-500 text-sm mt-[1px]">
+      {user && (<p className="font-semibold text-blue-500 text-sm mt-[1px]">
           <i className="fas fa-coins mr-1.5"></i>
           {!user ? formatTokens(tokens) : formatTokens(tkn)}
-        </p>
+        </p>)}
         
         {user ? (
           <>

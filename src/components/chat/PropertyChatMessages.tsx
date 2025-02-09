@@ -1,6 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Message } from '../../types';
 import {MemoizedReactMarkdown2} from '../markdown';
+import { useAuthStore } from '../../store/authStore';
+import { LoginModal } from '../LoginModal';
 
 function formatText(content: string) {
   console.log("Before Formatting", content);
@@ -15,6 +17,8 @@ interface PropertyChatMessagesProps {
 
 export function PropertyChatMessages({ messages, isLoading }: PropertyChatMessagesProps) {
   const lastMessageRef = useRef<HTMLDivElement | null>(null);
+  const { user } = useAuthStore();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   useEffect(() => {
       if (lastMessageRef.current) {
@@ -24,6 +28,13 @@ export function PropertyChatMessages({ messages, isLoading }: PropertyChatMessag
         });
       }
     }, [messages]);
+
+    useEffect(() => {
+      if (messages.length > 3 && !user) {
+        setIsLoginModalOpen(true);
+      }
+    }, [messages, user]);
+
   return (
     <div className="space-y-4 text-sm">
       {messages.map((message,index) => (
@@ -61,6 +72,7 @@ export function PropertyChatMessages({ messages, isLoading }: PropertyChatMessag
   ))}
 </div>
       )}
+       <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
     </div>
   );
 }

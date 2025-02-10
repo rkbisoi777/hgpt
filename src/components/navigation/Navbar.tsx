@@ -10,6 +10,7 @@ import { TokenService } from '../../lib/tokenService';
 import { supabase } from '../../lib/supabaseClient';
 import { WishlistService } from '../../lib/WishlistService';
 import { CompareService } from '../../lib/CompareService';
+import { useModal } from '../LoginModalContext';
 
 const formatTokens = (tokens: number): string => {
   if (tokens >= 1000) {
@@ -28,6 +29,7 @@ export function Navbar() {
   const { tokens } = useToken();
   const [wishlistCount, setWishlistCount] = useState(0);
   const [compareCount, setCompareCount] = useState(0);
+  const { openLoginModal } = useModal();
 
   useEffect(() => {
     const fetchCounts = async () => {
@@ -144,11 +146,11 @@ export function Navbar() {
             </button>
           </>
         ) : (
-          <Link to="/login">
-            <button className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-sm px-3 py-1.5 rounded-lg">
+          // <Link to="/login">
+            <button onClick={openLoginModal} className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-sm px-3 py-1.5 rounded-lg">
               Login
             </button>
-          </Link>
+          // </Link>
         )}
       </div>
 

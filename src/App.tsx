@@ -19,6 +19,8 @@ import { useAuthStore } from './store/authStore';
 import { LoginPage } from './components/auth/LoginPage';
 //import { RegisterPage } from './components/auth/RegisterPage';
 import { RegisterPage } from './components/auth/RegisterWithOTP';
+import { ModalProvider } from './components/LoginModalContext';
+import { LoginModal } from './components/LoginModal';
 
 function App() {
   const { initializeSession } = useAuthStore();
@@ -28,6 +30,7 @@ function App() {
   }, [initializeSession]);
 
   return (
+    <ModalProvider>
     <TokenProvider>
       <Layout>
         <Routes>
@@ -94,8 +97,10 @@ function App() {
             },
           }}
         />
+        <LoginModal />
       </Layout>
     </TokenProvider>
+    </ModalProvider>
   );
 }
 

@@ -142,8 +142,9 @@ import { PropertyGrid } from './property/PropertyGrid';
 import { SuggestedQuestions } from './SuggestedQuestions';
 import { PreferenceForm } from './PreferenceForm';
 import { MemoizedReactMarkdown } from './markdown';
-import {LoginModal} from './LoginModal';
+// import {LoginModal} from './LoginModal';
 import { useAuthStore } from '../store/authStore';
+import { useModal } from './LoginModalContext';
 
 interface MessageListProps {
   messages: Message[];
@@ -158,6 +159,10 @@ function formatText(content: string) {
 }
 
 export function MessageList({ messages, isLoading, onSendMessage, suggestedQuestions }: MessageListProps) {
+
+  const { openLoginModal } = useModal();
+
+  
 
   const questions = [
         'What is your purpose?',
@@ -177,7 +182,7 @@ export function MessageList({ messages, isLoading, onSendMessage, suggestedQuest
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [draftAnswers, setDraftAnswers] = useState<Record<string, string>>({});
 
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  // const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const { user } = useAuthStore();
   const lastMessageRef = useRef<HTMLDivElement | null>(null);
 
@@ -191,11 +196,17 @@ export function MessageList({ messages, isLoading, onSendMessage, suggestedQuest
     setDraftAnswers({}); // Clear draft answers after submission
   };
 
+  // useEffect(() => {
+  //   if (messages.length > 2 && !user) {
+  //     setIsLoginModalOpen(true);
+  //   }
+  // }, [messages, user]);
+
   useEffect(() => {
     if (messages.length > 2 && !user) {
-      setIsLoginModalOpen(true);
+      openLoginModal();
     }
-  }, [messages, user]);
+  }, [messages, openLoginModal]);
 
   useEffect(() => {
     if (lastMessageRef.current) {
@@ -248,7 +259,7 @@ export function MessageList({ messages, isLoading, onSendMessage, suggestedQuest
           ))}
         </div>
       )}
-      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
+      {/* <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} /> */}
     </div>
   );
 }

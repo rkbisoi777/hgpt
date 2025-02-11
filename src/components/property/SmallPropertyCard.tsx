@@ -180,7 +180,7 @@ export function SmallPropertyCard({ propertyId }: SmallPropertyCardProps) {
                 </div>
               </div>
             </div>
-            <ProgressBar percentage={67} />
+            <ProgressBar propertyId={propertyId}  />
           </div>
         </div>
 

@@ -190,7 +190,7 @@ export function PropertyCard({ propertyId }: PropertyCardProps) {
             </div>
 
             {/* Progress Bar */}
-            <ProgressBar percentage={67} />
+            <ProgressBar propertyId={propertyId}  />
           </div>
         </div>
       </div>

@@ -32,6 +32,18 @@ export function PropertyCard({ propertyId }: PropertyCardProps) {
   const [error, setError] = useState<string | null>(null);
   const [inWishlist, setInWishlist] = useState<boolean>(false);
   const [inCompareList, setInCompareList] = useState<boolean>(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+  // const [starTransition, setStartTransition] = useState<boolean>(false);
+
+  // useEffect(() => {
+  //   // Set a timer to change the state to true after 10 seconds
+  //   const timer = setTimeout(() => {
+  //     setStartTransition(true);
+  //   }, 10000); // 10 seconds
+
+  //   // Clean up the timer when the component unmounts
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   // Fetch property details
   const fetchProperty = useCallback(async () => {
@@ -51,6 +63,19 @@ export function PropertyCard({ propertyId }: PropertyCardProps) {
   useEffect(() => {
     fetchProperty();
   }, [fetchProperty]);
+
+  useEffect(() => {
+    if (property?.images) {
+      const images = Object.values(property.images).filter(Boolean); // Filter out any undefined images
+      if (images.length > 0) {
+        const interval = setInterval(() => {
+          
+          setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+        }, 3000); // Adjust time as needed
+        return () => clearInterval(interval);
+      }
+    }
+  }, [property]);
 
   // Check wishlist & compare list status
   useEffect(() => {
@@ -107,16 +132,38 @@ export function PropertyCard({ propertyId }: PropertyCardProps) {
       </div>
     );
 
+    const imageUrls = property?.images ? Object.values(property.images).flat() : [];
+
   return property ? (
     <Link to={`/property/${property.id}`} className="block">
       <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 relative w-full h-80">
         <div className="relative w-full h-full">
-          <img
-            src={property.imageUrl}
-            alt={property.title}
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
+          {/* Image Slider */}
+          {/* {starTransition ? ( */}
+          <div className="relative w-full h-full">
+            {imageUrls.map((image, index) => (
+              <img
+                key={index}
+                src={image || ''}
+                alt={property.title}
+                className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-500 ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'}`}
+                loading="lazy"
+              />
+            ))}
+          </div>
+          {/* ) : (
+            <img
+              src={property.imageUrl}
+              alt={property.title}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          )} */}
+
+          {/* Current Image Number / Total Images */}
+          <div className="absolute bottom-2 right-2 text-white text-[10px] font-semibold bg-black bg-opacity-50 rounded-xl px-1.5 py-0.5">
+            {currentImageIndex + 1}/{imageUrls.length}
+          </div>
 
           {/* Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex flex-col justify-between p-3 text-white">

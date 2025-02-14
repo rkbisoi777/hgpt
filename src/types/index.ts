@@ -10,6 +10,9 @@ export interface Property {
   description: string;
   created_at: string;
   updated_at: string;
+  images: {
+    [key: string]: string | string[]; 
+  };
 }
 
 export interface Message {

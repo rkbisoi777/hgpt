@@ -131,7 +131,7 @@ interface PropertyStore {
   isInCompareList: (propertyId: string) => Promise<boolean>;
 }
 
-export const usePropertyStore = create<PropertyStore>((set, get) => ({
+export const usePropertyStore = create<PropertyStore>((set) => ({
   properties: [],
   isLoading: false,
   error: null,

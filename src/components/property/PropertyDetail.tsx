@@ -27,6 +27,18 @@ export function PropertyDetail() {
   const [property, setProperty] = useState<Property | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('NearbyFacilities');
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+  // const [starTransition, setStartTransition] = useState<boolean>(false);
+
+  // useEffect(() => {
+  //   // Set a timer to change the state to true after 10 seconds
+  //   const timer = setTimeout(() => {
+  //     setStartTransition(true);
+  //   }, 10000); // 10 seconds
+
+  //   // Clean up the timer when the component unmounts
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   // Section Refs
   const nearbyRef = useRef<HTMLDivElement | null>(null);
@@ -69,6 +81,19 @@ export function PropertyDetail() {
     fetchProperty();
   }, [id, getPropertyById]);
 
+  useEffect(() => {
+    if (property?.images) {
+      const images = Object.values(property.images).filter(Boolean); // Filter out any undefined images
+      if (images.length > 0) {
+        const interval = setInterval(() => {
+          
+          setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+        }, 3000); // Adjust time as needed
+        return () => clearInterval(interval);
+      }
+    }
+  }, [property]);
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -84,6 +109,8 @@ export function PropertyDetail() {
       </div>
     );
   }
+
+  const imageUrls = property.images ? Object.values(property.images).flat() : [];
 
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
@@ -123,12 +150,32 @@ export function PropertyDetail() {
           />
         </div> */}
         <div className="aspect-video w-full max-h-[400px] rounded-lg overflow-hidden border border-gray-300">
-  <img
-    src={property.imageUrl}
-    alt={property.title || "Property Image"}
-    loading="lazy"
-    className="w-full h-full object-contain"
-  />
+  {/* Image Slider */}
+          {/* {starTransition ? ( */}
+          <div className="relative w-full h-full">
+            {imageUrls.map((image, index) => (
+              <img
+                key={index}
+                src={image || ''}
+                alt={property.title}
+                className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-500 ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'}`}
+                loading="lazy"
+              />
+            ))}
+            <div className="absolute bottom-2 right-2 text-white text-[10px] font-semibold bg-black bg-opacity-50 rounded-xl px-1.5 py-0.5">
+            {currentImageIndex + 1}/{imageUrls.length}
+          </div>
+          </div>
+          {/* ) : (
+            <img
+              src={property.imageUrl}
+              alt={property.title}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          )} */}
+          {/* Current Image Number / Total Images */}
+          
 </div>
 
 

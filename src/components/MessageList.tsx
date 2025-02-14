@@ -234,16 +234,16 @@ export function MessageList({ messages, isLoading, onSendMessage, suggestedQuest
           {message.role === 'assistant' && message.properties && (
             <div className="mt-2 mb-1">
               <PropertyGrid properties={message.properties} />
-              {!isPreferenceFilled && (
+              {(!isPreferenceFilled && !user) && (
                     <PreferenceForm
                       questions={questions}
                       answers={draftAnswers}
                       onSubmit={handlePreferenceSubmit}
                     />
                   )}
-              {!user && (<div className="mt-2">
+              <div className="mt-2">
                 <SuggestedQuestions questions={suggestedQuestions} onQuestionClick={onSendMessage} />
-              </div>)}
+              </div>
             </div>
           )}
           {((index === messages.length - 2) && (message.role === 'assistant')) && <div ref={lastMessageRef} />}

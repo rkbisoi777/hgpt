@@ -241,9 +241,9 @@ export function MessageList({ messages, isLoading, onSendMessage, suggestedQuest
                       onSubmit={handlePreferenceSubmit}
                     />
                   )}
-              <div className="mt-2">
+              {!user && (<div className="mt-2">
                 <SuggestedQuestions questions={suggestedQuestions} onQuestionClick={onSendMessage} />
-              </div>
+              </div>)}
             </div>
           )}
           {((index === messages.length - 2) && (message.role === 'assistant')) && <div ref={lastMessageRef} />}

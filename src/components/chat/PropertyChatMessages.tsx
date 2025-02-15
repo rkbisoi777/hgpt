@@ -6,7 +6,7 @@ import { useAuthStore } from '../../store/authStore';
 import { useModal } from '../LoginModalContext';
 
 function formatText(content: string) {
-  console.log("Before Formatting", content);
+  // console.log("Before Formatting", content);
   const pattern = /Suggested questions:[\s\S]*/i;
   return content.replace(pattern, '').trim();
 }

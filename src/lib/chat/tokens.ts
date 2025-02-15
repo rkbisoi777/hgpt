@@ -7,7 +7,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 // Function to count tokens in a prompt
 export async function countTokensInPrompt(prompt: string): Promise<number> {
   const countResult = await model.countTokens(prompt);
-  console.log(`Total Tokens in Prompt: ${countResult.totalTokens}`); 
+  // console.log(`Total Tokens in Prompt: ${countResult.totalTokens}`); 
   return countResult.totalTokens;
 }
 

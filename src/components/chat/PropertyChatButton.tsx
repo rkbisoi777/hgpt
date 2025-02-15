@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { X } from 'lucide-react';
+import { Calendar, Download, Phone, X } from 'lucide-react';
 import { PropertyChatDialog } from './PropertyChatDialog';
 import { Property } from '../../types';
 
@@ -66,10 +66,103 @@ export function PropertyChatButton({ property }: PropertyChatButtonProps) {
         </div>
       )} */}
 
+      {/* <button
+        ref={chatButtonRef}
+        onClick={() => setIsOpen(true)}
+        className="fixed bottom-3 left-4 p-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors z-40"
+        aria-label="Chat about this property"
+        aria-expanded={isOpen}
+        aria-controls="property-chat-dialog"
+      >
+        <Phone />
+      </button>
+
       <button
         ref={chatButtonRef}
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-4 right-4 p-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors z-40 animate-bounce"
+        className="fixed bottom-3 left-16 p-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors z-40"
+        aria-label="Chat about this property"
+        aria-expanded={isOpen}
+        aria-controls="property-chat-dialog"
+      >
+        <Calendar />
+      </button>
+
+      <button
+        ref={chatButtonRef}
+        onClick={() => setIsOpen(true)}
+        className="fixed bottom-3 left-28 p-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors z-40"
+        aria-label="Chat about this property"
+        aria-expanded={isOpen}
+        aria-controls="property-chat-dialog"
+      >
+        <Video />
+      </button>
+
+      <button
+        ref={chatButtonRef}
+        onClick={() => setIsOpen(true)}
+        className="fixed bottom-3 left-40 p-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors z-40"
+        aria-label="Chat about this property"
+        aria-expanded={isOpen}
+        aria-controls="property-chat-dialog"
+      >
+        <Download />
+      </button> */}
+
+      <div className='fixed flex flex-row justify-between bottom-3 left-3 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full w-1/2 max-w-[188px] p-2'>
+         <button
+                ref={chatButtonRef}
+                onClick={() => {}}
+                className="p-2.5 py-1.5 bg-white text-blue-500 rounded-full shadow-lg hover:bg-blue-600 transition-colors z-40"
+                aria-label="Chat about this property"
+                aria-expanded={isOpen}
+                aria-controls="property-chat-dialog"
+              >
+                <i className="fas fa-phone"></i>
+              </button>
+        
+              <button
+                ref={chatButtonRef}
+                onClick={() => {}}
+                className="px-[11px] py-1.5 bg-white text-blue-500 rounded-full shadow-lg hover:bg-blue-600 transition-colors z-40"
+                aria-label="Chat about this property"
+                aria-expanded={isOpen}
+                aria-controls="property-chat-dialog"
+              >
+                <i className="fas fa-calendar"></i>
+              </button>
+
+              <button
+                ref={chatButtonRef}
+                onClick={() => {}}
+                className="p-2.5 py-1.5 bg-white text-blue-500 rounded-full shadow-lg hover:bg-blue-600 transition-colors z-40"
+                aria-label="Chat about this property"
+                aria-expanded={isOpen}
+                aria-controls="property-chat-dialog"
+              >
+                <i className="fas fa-download"></i>
+              </button>
+        
+              <button
+                ref={chatButtonRef}
+                onClick={() => {}}
+                className="p-2.5 py-1.5 bg-white text-blue-500 rounded-full shadow-lg hover:bg-blue-600 transition-colors z-40"
+                aria-label="Chat about this property"
+                aria-expanded={isOpen}
+                aria-controls="property-chat-dialog"
+              >
+                {/* <i className="fas fa-360-degrees"></i> */}
+                <i className="fas fa-vr-cardboard"></i>
+              </button>
+        
+              
+      </div>
+
+      <button
+        ref={chatButtonRef}
+        onClick={() => setIsOpen(true)}
+        className="fixed bottom-3 right-3 p-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors z-40"
         aria-label="Chat about this property"
         aria-expanded={isOpen}
         aria-controls="property-chat-dialog"
@@ -80,7 +173,11 @@ export function PropertyChatButton({ property }: PropertyChatButtonProps) {
             alt="HouseGPT"
           />
         </div>
-        <div className="absolute top-0 right-0 w-3 h-3 bg-red-500 text-white text-xs rounded-full flex items-center justify-center p-1"></div>
+        {/* <div className="absolute top-0 right-0 w-3 h-3 bg-red-500 text-white text-xs rounded-full flex items-center justify-center p-1 animation-ping"></div> */}
+        <span className="absolute top-0 right-0 flex size-3">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+          <span className="relative inline-flex size-3 rounded-full bg-red-500"></span>
+        </span>
       </button>
 
       {/* Chat Modal */}

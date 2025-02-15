@@ -49,7 +49,7 @@ export function HomeChatButton({ onSubmit }: HomeChatButtonProps) {
 
       <button
         onClick={handleSubmit}
-        className="fixed bottom-4 text-sm right-4 p-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors z-40 animate-bounce"
+        className="fixed bottom-4 text-sm right-4 p-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors z-40"
         aria-label="Chat about this property"
         aria-controls="property-chat-dialog"
       >
@@ -58,8 +58,11 @@ export function HomeChatButton({ onSubmit }: HomeChatButtonProps) {
             src="https://i.postimg.cc/cHgZjqp8/output-onlinepngtools.png"
             alt="HouseGPT"
           />
-          <div className="absolute -top-2 -right-1 w-3 h-3 bg-red-500 text-white text-xs rounded-full flex items-center justify-center p-1">
-          </div>
+          {/* <div className="absolute -top-2 -right-1 w-3 h-3 bg-red-500 text-white text-xs rounded-full flex items-center justify-center p-1"></div> */}
+          <span className="absolute -top-2 -right-1 flex size-3">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+            <span className="relative inline-flex size-3 rounded-full bg-red-500"></span>
+          </span>
         </div>
       </button>
 

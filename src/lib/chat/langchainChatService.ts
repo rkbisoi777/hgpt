@@ -94,7 +94,7 @@ export class ChatService {
     try {
       this.model = new ChatGoogleGenerativeAI({
         apiKey,
-        modelName: "gemini-pro",
+        modelName: "gemini-1.5-pro",
         maxOutputTokens: 2048,
         temperature: 0.7,
         streaming: true
